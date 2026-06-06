@@ -2,7 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 // Importa tu conexión a la BD aquí (ajusta la ruta según tu proyecto)
-import pool from "../config/db.js"; 
+import {pool} from "../config/db.js"; 
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "super_secreto_desarrollo_123";
