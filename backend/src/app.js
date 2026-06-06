@@ -4,9 +4,9 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 
-import noticiasRoutes from "./routes/noticias.routes.js";
-import autoresRoutes from "./routes/autores.routes.js";
-import categoriasRoutes from "./routes/categorias.routes.js";
+import noticiasRoutes from "../routes/noticias.routes.js";
+import autoresRoutes from "../routes/autores.routes.js";
+import categoriasRoutes from "../routes/categorias.routes.js";
 
 const app = express();
 
