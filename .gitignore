@@ -1,0 +1,35 @@
+# ===================
+# BACKEND
+# ===================
+
+backend/node_modules/
+backend/.env
+
+# ===================
+# FRONTEND
+# ===================
+
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+
+# ===================
+# LOGS
+# ===================
+
+*.log
+logs/
+
+# ===================
+# EDITORES
+# ===================
+
+.vscode/
+.idea/
+
+# ===================
+# SISTEMA
+# ===================
+
+.DS_Store
+Thumbs.db

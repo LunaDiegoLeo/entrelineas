@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar | Entre Líneas</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Permanent+Marker&family=Space+Grotesk:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/busqueda.css">
+    <link rel="icon" href="assets/images/ico2.png" type="image/png">
+
+</head>
+<style>
+</style>
+
+<body>
+
+    <nav class="navbar">
+        <div class="nav-logo marker-text">
+            <a href="index.html" style="color: inherit; text-decoration: none;">
+                ENTRE LÍNEAS
+            </a>
+        </div>
+    </nav>
+
+    <section class="search-box cutout-box">
+
+        <h2 class="marker-text">
+            Buscar Noticias
+        </h2>
+
+        <select id="tipoBusqueda" class="input">
+            <option value="">¿Cómo quieres buscar?</option>
+
+            <option value="titulo">
+                Por título
+            </option>
+
+            <option value="categoria">
+                Por categoría
+            </option>
+
+            <option value="autor">
+                Por autor
+            </option>
+
+            <option value="fecha">
+                Por fechas
+            </option>
+        </select>
+
+        <!-- CAMPOS DINÁMICOS -->
+        <div id="camposBusqueda"></div>
+        <br>
+        <button id="buscarBtn" class="btn btn-green">
+            Buscar
+        </button>
+
+    </section>
+
+    <section class="section-container">
+        <div id="resultados" class="grid-layout"></div>
+
+        <div id="pagination" class="pagination"></div>
+    </section>
+    <script src="assets/js/busqueda.js"></script>
+
+</body>
+
+</html>

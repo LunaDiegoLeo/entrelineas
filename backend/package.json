@@ -1,0 +1,17 @@
+{
+  "name": "entrelineas-backend",
+  "version": "1.0.0",
+  "description": "API Entre Líneas",
+  "main": "src/app.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/app.js",
+    "start": "node src/app.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "pg": "^8.21.0"
+  }
+}

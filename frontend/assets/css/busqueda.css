@@ -1,0 +1,132 @@
+.search-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 700px;
+}
+
+.search-panel input,
+.search-panel select {
+    padding: 1rem;
+    border: 3px solid var(--black);
+    font-family: var(--font-text);
+    font-size: 1rem;
+    background: white;
+    box-shadow: 4px 4px 0px var(--black);
+}
+
+.date-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.date-row input {
+    flex: 1;
+}
+
+.search-box {
+    max-width: 900px;
+    margin: 3rem auto;
+    padding: 2rem;
+}
+
+.input {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 1rem;
+    border: 3px solid black;
+    font-family: var(--font-ui);
+    font-size: 1rem;
+    background: white;
+}
+
+.date-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+}
+
+.page-btn {
+    width: 50px;
+    height: 50px;
+    border: 3px solid black;
+    background: white;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    box-shadow: 4px 4px 0px black;
+    transition: 0.2s;
+}
+
+.page-btn:hover {
+    transform: translateY(-3px);
+}
+
+.page-btn.active {
+    background: var(--purple);
+    color: white;
+}
+
+.empty-state {
+    margin-top: 2rem;
+    background: white;
+    border: 3px dashed black;
+    padding: 3rem 2rem;
+    text-align: center;
+    box-shadow: 6px 6px 0px black;
+    transform: rotate(-1deg);
+}
+
+.empty-state h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+.search-loading {
+    text-align: center;
+    margin-top: 2rem;
+    font-family: var(--font-marker);
+    font-size: 1.5rem;
+}
+
+.pagination {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.page-btn {
+    min-width: 50px;
+    height: 50px;
+    border: 3px solid var(--black);
+    background: white;
+    font-family: var(--font-marker);
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 4px 4px 0px var(--black);
+    transition: all 0.2s ease;
+}
+
+.page-btn:hover {
+    transform: translateY(-3px);
+}
+
+.page-btn.active {
+    background: var(--purple);
+    color: white;
+}
