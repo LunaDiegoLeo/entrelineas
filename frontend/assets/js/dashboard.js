@@ -1,11 +1,8 @@
-// AGREGAR ESTA LÍNEA AL PRINCIPIO:
-const API_BASE = "https://entrelineas.onrender.com/api"; // Asegúrate de que sea tu URL real del backend
-
 document.addEventListener("DOMContentLoaded", async () => {
-    
     const token = localStorage.getItem("entrelineas_token");
 
     if (!token) {
+        alert("Atrapado: No se encontró ningún token en el navegador.");
         window.location.replace("login.html");
         return;
     }
@@ -19,18 +16,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         if (!response.ok) {
-            throw new Error("Sesión inválida");
+            // Si el backend responde pero dice que el token es malo
+            throw new Error(`El servidor rechazó el token. Código: ${response.status}`);
         }
         
+        // ¡Éxito!
         document.body.style.display = "block";
 
     } catch (error) {
-        console.error("Error de verificación:", error); // <-- Agregué esto para que veas el error real en consola por si acaso
+        // TRAMPA DEFINITIVA: Esto mostrará el error en tu cara antes de sacarte
+        alert("Fallo la conexión con el backend. Razón: " + error.message);
+        
         localStorage.removeItem("entrelineas_token");
-        //window.location.replace("login.html");
+        // Dejaremos la redirección comentada una última vez para que puedas leer la alerta
+        // window.location.replace("login.html");
     }
 
-    // Botón Cerrar Sesión
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
         logoutBtn.addEventListener("click", () => {
