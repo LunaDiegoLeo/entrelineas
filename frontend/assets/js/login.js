@@ -8,22 +8,23 @@ loginForm.addEventListener("submit", async (e) => {
 
     const usuario = document.getElementById("usuario").value.trim();
     const password = document.getElementById("password").value.trim();
-    
     errorMsg.style.display = "none";
 
     try {
         const response = await fetch(`${API_BASE}/auth/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ usuario, password }),
-            credentials: "include" // VITAL: Permite recibir y guardar la cookie HttpOnly
+            body: JSON.stringify({ usuario, password })
+            // OJO: Ya no lleva credentials: "include"
         });
 
         const data = await response.json();
 
         if (!response.ok) throw new Error(data.error);
 
-        // ¡YA NO USAMOS LOCALSTORAGE! El navegador guardó la cookie automáticamente.
+        // Guardamos el token en la memoria del navegador
+        localStorage.setItem("entrelineas_token", data.token);
+        
         window.location.replace("dashboard.html");
 
     } catch (error) {

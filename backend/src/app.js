@@ -20,7 +20,6 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use(cookieParser()); // Habilitamos la lectura de cookies
 
 app.use("/api/noticias", noticiasRoutes);
 app.use("/api/autores", autoresRoutes);
