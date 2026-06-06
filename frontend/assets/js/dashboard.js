@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (error) {
         console.error("Error de verificación:", error); // <-- Agregué esto para que veas el error real en consola por si acaso
         localStorage.removeItem("entrelineas_token");
-        window.location.replace("login.html");
+        //window.location.replace("login.html");
     }
 
     // Botón Cerrar Sesión
