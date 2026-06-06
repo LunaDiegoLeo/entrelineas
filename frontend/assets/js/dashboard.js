@@ -1,4 +1,5 @@
 const API_BASE = "https://entrelineas.onrender.com/api";
+
 document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("entrelineas_token");
 
