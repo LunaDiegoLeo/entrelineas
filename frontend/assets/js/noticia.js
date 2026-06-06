@@ -1,7 +1,7 @@
 const params = new URLSearchParams(window.location.search);
 const slug = params.get("slug");
 const API_BASE = "https://entrelineas.onrender.com/api";
-if (!slug) {
+if (slug===null) {
     window.location.replace("index.html");
 }
 
