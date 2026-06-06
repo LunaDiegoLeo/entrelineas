@@ -4,7 +4,7 @@ const authorsContainer = document.getElementById("authors-container");
 
 
 
-const API_BASE = "http://entre-lineas.mywebcommunity.org/api";
+const API_BASE = "https://entrelineas.onrender.com/api";
 
 
 
@@ -13,7 +13,7 @@ async function cargarNoticias() {
     try {
 
         const response = await fetch(
-            `${API_BASE}/get-full.php`
+            `${API_BASE}/noticias`
         );
 
         if (!response.ok) {
@@ -104,7 +104,7 @@ function renderNoticias(noticias) {
                 </p>
 
                 <a 
-                    href="top-top-top/${noticia.slug}" 
+                    href="noticia.html?slug=${noticia.slug}"
                     class="btn ${button}"
                 >
                     Leer más
@@ -127,7 +127,7 @@ async function cargarAutores() {
     try {
 
         const response = await fetch(
-            `${API_BASE}/get-full-autores.php`
+            `${API_BASE}/autores`
         );
 
         if (!response.ok) {

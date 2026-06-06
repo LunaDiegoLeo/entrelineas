@@ -955,8 +955,8 @@ img{
 }
 
 .author-info img {
-    width: 105px;
-    height: 120px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     border: 3px solid var(--black);
 }

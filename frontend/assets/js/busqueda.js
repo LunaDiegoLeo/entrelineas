@@ -11,7 +11,7 @@ let noticiasGlobal = [];
 let paginaActual = 1;
 
 const noticiasPorPagina = 5;
-
+const API_BASE = "https://entrelineas.onrender.com/api";
 
 // CAMBIAR CAMPOS
 tipoBusqueda.addEventListener("change", async () => {
@@ -71,7 +71,8 @@ tipoBusqueda.addEventListener("change", async () => {
                 try {
 
                     const response = await fetch(
-                        `http://entre-lineas.mywebcommunity.org/api/get-full.php?titulo=${encodeURIComponent(valor)}`
+                        `${API_BASE}/noticias/buscar?titulo=${encodeURIComponent(valor)}`
+
                     );
 
                     let noticias =
@@ -172,7 +173,7 @@ tipoBusqueda.addEventListener("change", async () => {
 async function cargarCategorias() {
 
     const response = await fetch(
-        "http://entre-lineas.mywebcommunity.org/api/get-full-categorias.php"
+        `${API_BASE}/categorias`
     );
 
     const categorias = await response.json();
@@ -198,7 +199,7 @@ async function cargarCategorias() {
 async function cargarAutores() {
 
     const response = await fetch(
-        "http://entre-lineas.mywebcommunity.org/api/get-full-autores.php"
+        `${API_BASE}/autores`
     );
 
     const autores = await response.json();
@@ -234,7 +235,7 @@ buscarBtn.addEventListener("click", async () => {
             document.getElementById("titulo").value;
 
         url =
-            `http://entre-lineas.mywebcommunity.org/api/get-full.php?titulo=${encodeURIComponent(titulo)}`;
+            `${API_BASE}/noticias/buscar?titulo=${encodeURIComponent(titulo)}`;
 
     }
 
@@ -245,7 +246,7 @@ buscarBtn.addEventListener("click", async () => {
             document.getElementById("categoria").value;
 
         url =
-            `http://entre-lineas.mywebcommunity.org/api/get-full-categorias.php?id_categoria=${categoria}`;
+            `${API_BASE}/categorias/${categoria}/noticias`;
 
     }
 
@@ -256,7 +257,7 @@ buscarBtn.addEventListener("click", async () => {
             document.getElementById("autor").value;
 
         url =
-            `http://entre-lineas.mywebcommunity.org/api/get-full-autores.php?id_autor=${autor}`;
+            `${API_BASE}/autores/${autor}/noticias`;
 
     }
 
@@ -270,7 +271,7 @@ buscarBtn.addEventListener("click", async () => {
             document.getElementById("fecha_fin").value;
 
         url =
-            `http://entre-lineas.mywebcommunity.org/api/get-full-fechas.php?fecha_inicio=${inicio}&fecha_fin=${fin}`;
+            `${API_BASE}/noticias/fechas?fecha_inicio=${inicio}&fecha_fin=${fin}`;
 
     }
 
@@ -392,7 +393,7 @@ function renderPagina() {
                 </p>
 
                 <a
-                    href="/top-top-top/${noticia.slug}"
+                    href="noticia.html?slug=${noticia.slug}"
                     class="btn ${button}"
                 >
                     Leer más

@@ -1,13 +1,14 @@
-const path = window.location.pathname;
+const params = new URLSearchParams(window.location.search);
+const slug = params.get("slug");
+const API_BASE = "https://entrelineas.onrender.com/api";
 
-const slug = path.split("/").pop();
 
 async function cargarNoticia() {
 
     try {
 
         const response = await fetch(
-            `http://entre-lineas.mywebcommunity.org/api/get-full.php?slug=${slug}`
+            `${API_BASE}/noticias/${slug}`
         );
 
         const noticia = await response.json();
@@ -36,7 +37,7 @@ function renderNoticia(noticia) {
     document.getElementById("resumen").textContent =
         noticia.resumen;
 
-    document.getElementById("autor-foto").src ='../assets/images/autores/' +
+    document.getElementById("autor-foto").src ='assets/images/autores/' +
         noticia.foto;
 
     document.getElementById("autor-nombre").textContent =
@@ -65,7 +66,7 @@ async function cargarTrending() {
     try {
 
         const response = await fetch(
-            "/api/get-full.php"
+            `${API_BASE}/noticias`
         );
 
         const noticias = await response.json();
@@ -95,8 +96,8 @@ function renderTrending(noticias) {
         trendingList.innerHTML += `
 
             <li>
-
-                <a href="/top-top-top/${noticia.slug}">
+                <a
+                    href="noticia.html?slug=${noticia.slug}">
 
                     ${noticia.titulo}
 
