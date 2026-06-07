@@ -239,7 +239,7 @@ async function publicarNoticia() {
 
     const btnSQL = document.querySelector(".btn-green");
     const textoOriginal = btnSQL.textContent;
-    btnSQL.textContent = "⏳ Subiendo e insertando... ¡Soporten!";
+    btnSQL.textContent = "Subiendo e insertando... ¡Soporten!";
     btnSQL.disabled = true;
     btnSQL.style.opacity = "0.7";
 
