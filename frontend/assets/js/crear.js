@@ -98,25 +98,37 @@ function agregarBloque(tipo) {
 
     let inner = `<button class="delete-btn" onclick="borrarBloque('${id}')">X</button>`;
 
+    const barraFormato = `
+        <div class="format-bar">
+            <button type="button" class="format-btn" onclick="abrirModal('${id}', 'b')" title="Negritas"><b>B</b></button>
+            <button type="button" class="format-btn" onclick="abrirModal('${id}', 'i')" title="Cursiva"><i>I</i></button>
+            <button type="button" class="format-btn" onclick="abrirModal('${id}', 'u')" title="Subrayado"><u>U</u></button>
+            <button type="button" class="format-btn" onclick="abrirModal('${id}', 'a')" title="Enlace">🔗 Link</button>
+        </div>
+    `;
+
     if (tipo === 'parrafo') {
         inner += `<label>Párrafo:</label>
-                  <textarea class="bloque-input" data-tipo="p" rows="4" placeholder="Permite etiquetas como <b>texto</b>" style="width:100%;" oninput="actualizarVistaPrevia()"></textarea>`;
+                  ${barraFormato}
+                  <textarea class="bloque-input" data-tipo="p" rows="4" style="width:100%; border-radius: 0 0 5px 5px;" oninput="actualizarVistaPrevia()"></textarea>`;
     } else if (tipo === 'subtitulo') {
         inner += `<label>Subtítulo (H2):</label>
                   <input type="text" class="bloque-input" data-tipo="h2" style="width:100%;" oninput="actualizarVistaPrevia()">`;
     } else if (tipo === 'cita') {
         inner += `<label>Cita (Blockquote):</label>
-                  <textarea class="bloque-input" data-tipo="blockquote" rows="2" style="width:100%;" oninput="actualizarVistaPrevia()"></textarea>`;
+                  ${barraFormato}
+                  <textarea class="bloque-input" data-tipo="blockquote" rows="2" style="width:100%; border-radius: 0 0 5px 5px;" oninput="actualizarVistaPrevia()"></textarea>`;
     } else if (tipo === 'tarjeta-estilo') {
         inner += `<label>Tarjeta (Gris con padding):</label>
-                  <textarea class="bloque-input" data-tipo="card-estilo" rows="4" placeholder="Admite texto, \\n y etiquetas HTML" style="width:100%;" oninput="actualizarVistaPrevia()"></textarea>`;
+                  ${barraFormato}
+                  <textarea class="bloque-input" data-tipo="card-estilo" rows="4" style="width:100%; border-radius: 0 0 5px 5px;" oninput="actualizarVistaPrevia()"></textarea>`;
     } else if (tipo === 'tarjeta-simple') {
         inner += `<label>Tarjeta (Sin estilo interno):</label>
-                  <textarea class="bloque-input" data-tipo="card-simple" rows="4" placeholder="Admite texto, \\n y etiquetas HTML" style="width:100%;" oninput="actualizarVistaPrevia()"></textarea>`;
+                  ${barraFormato}
+                  <textarea class="bloque-input" data-tipo="card-simple" rows="4" style="width:100%; border-radius: 0 0 5px 5px;" oninput="actualizarVistaPrevia()"></textarea>`;
     } else if (tipo === 'imagen') {
         inner += `<label>Imagen de Contenido:</label>
                   <input type="file" accept="image/*" onchange="previewImagenBloque(this)">
-                  <!-- Inputs ocultos para guardar la data -->
                   <input type="hidden" class="bloque-input" data-tipo="img">
                   <input type="text" class="bloque-input mt-2" data-tipo="img-alt" placeholder="Pie de foto / Alt" style="width:100%; margin-top:10px;" oninput="actualizarVistaPrevia()">
                   <img class="img-preview-temp" style="width: 100px; display: none; margin-top: 10px;">`;
@@ -309,4 +321,71 @@ async function publicarNoticia() {
         btnSQL.disabled = false;
         btnSQL.style.opacity = "1";
     }
+}
+
+// --- LÓGICA DE LA VENTANA EMERGENTE (MODAL) ---
+let bloqueActivoId = null;
+let formatoActivo = null;
+
+function abrirModal(bloqueId, tipoFormato) {
+    bloqueActivoId = bloqueId;
+    formatoActivo = tipoFormato;
+    
+    const textarea = document.querySelector(`#${bloqueId} textarea`);
+    
+    // Si el usuario ya había seleccionado un pedazo de texto, lo atrapamos
+    const textoSeleccionado = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
+    
+    const modal = document.getElementById('formato-modal');
+    const titulo = document.getElementById('modal-titulo');
+    const inputTexto = document.getElementById('modal-texto');
+    const inputUrl = document.getElementById('modal-url');
+    const grupoUrl = document.getElementById('modal-url-group');
+
+    inputTexto.value = textoSeleccionado || "";
+    inputUrl.value = "";
+
+    // Configurar la ventana según el botón que apretó
+    if (tipoFormato === 'a') {
+        titulo.innerHTML = 'Insertar Enlace 🔗';
+        grupoUrl.style.display = 'block';
+    } else {
+        const nombre = tipoFormato === 'b' ? 'Negritas' : (tipoFormato === 'i' ? 'Cursivas' : 'Subrayado');
+        titulo.innerHTML = `Insertar ${nombre} ✨`;
+        grupoUrl.style.display = 'none';
+    }
+
+    modal.style.display = 'flex';
+    inputTexto.focus();
+}
+
+function cerrarModal() {
+    document.getElementById('formato-modal').style.display = 'none';
+}
+
+function inyectarFormato() {
+    const texto = document.getElementById('modal-texto').value.trim();
+    const url = document.getElementById('modal-url').value.trim();
+    
+    if (!texto) return alert("Debes escribir un texto, mi ciela 💅");
+
+    let codigoAInyectar = "";
+    if (formatoActivo === 'a') {
+        if (!url) return alert("Falta la URL del enlace 🔗");
+        codigoAInyectar = `<a href="${url}" target="_blank">${texto}</a>`;
+    } else {
+        codigoAInyectar = `<${formatoActivo}>${texto}</${formatoActivo}>`;
+    }
+
+    // Inyectar justo donde estaba el cursor en el textarea
+    const textarea = document.querySelector(`#${bloqueActivoId} textarea`);
+    const inicio = textarea.selectionStart;
+    const fin = textarea.selectionEnd;
+    const textoAntes = textarea.value.substring(0, inicio);
+    const textoDespues = textarea.value.substring(fin, textarea.value.length);
+    
+    textarea.value = textoAntes + codigoAInyectar + textoDespues;
+    
+    cerrarModal();
+    actualizarVistaPrevia();
 }
