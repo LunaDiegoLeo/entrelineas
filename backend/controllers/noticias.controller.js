@@ -129,7 +129,7 @@ export const crearNoticia = async (req, res) => {
         // 2. Insertamos a la base de datos de forma segura (con $1, $2, etc.)
         const query = `
             INSERT INTO noticias (titulo, slug, resumen, contenido, portada, fecha_publicacion, autor_id, categoria_id) 
-            VALUES ($1, $2, $3, $4, $5, NOW(), $6, $7) RETURNING id_noticia;
+            VALUES ($1, $2, $3, $4, $5, NOW(), $6, $7) RETURNING id;
         `;
         
         const values = [titulo, slug, resumen, contenido, portada, autor, categoria];
