@@ -106,12 +106,13 @@ function previewImagenBloque(input) {
 }
 
 // --- 4. GENERADOR DE HTML (Preview y SQL) ---
-function generarHTMLdelContenido(modo = 'preview') {
+// --- 4. GENERADOR DE HTML (Preview y SQL) ---
+function generarHTMLdelContenido() {
     let htmlFinal = "";
     document.querySelectorAll(".block-card").forEach(bloque => {
         const inputs = bloque.querySelectorAll(".bloque-input");
         const tipo = inputs[0].getAttribute("data-tipo");
-        let valor = inputs[0].value.trim();
+        let valor = inputs[0].value.trim(); // Aquí estará la URL real o texto
 
         if (!valor && tipo !== 'img') return;
 
@@ -130,15 +131,8 @@ function generarHTMLdelContenido(modo = 'preview') {
             htmlFinal += `<div class="inline-card">\n    ${textoBr}\n</div>\n\n`;
         } else if (tipo === "img") {
             const altText = inputs[1].value.trim();
-            let imgSrc = valor; 
-            
-            // Si es para SQL, inyectamos un marcador en vez de la URL blob temporal
-            if (modo === 'sql') {
-                const fName = inputs[0].getAttribute('data-filename') || 'imagen.jpg';
-                imgSrc = `URL_CLOUDINARY_AQUI/${fName}`;
-            }
-
-            htmlFinal += `<img class="cover-image" src="${imgSrc}" style="width: 80%; display: block; margin: 0 auto;" alt="${altText}">\n`;
+            // Para la imagen, el valor es la URL (ya sea la temporal o la real de Cloudinary)
+            htmlFinal += `<img class="cover-image" src="${valor}" style="width: 80%; display: block; margin: 0 auto;" alt="${altText}">\n`;
             if (altText) {
                 htmlFinal += `<p style="text-align: center; font-style: italic; margin-top: 10px; font-size: 0.9rem;">\n    ${altText}\n</p>\n\n`;
             }
@@ -148,31 +142,101 @@ function generarHTMLdelContenido(modo = 'preview') {
 }
 
 function actualizarVistaPrevia() {
-    document.getElementById("preview-contenido").innerHTML = generarHTMLdelContenido('preview');
+    document.getElementById("preview-contenido").innerHTML = generarHTMLdelContenido();
 }
 
-// --- 5. GENERAR SQL FINAL ---
-function generarSQL() {
+
+// --- NUEVO: FUNCIÓN PARA SUBIR A CLOUDINARY ---
+async function subirACloudinary(file) {
+    const CLOUD_NAME = process.env.CLOUD_NAME;
+    const UPLOAD_PRESET = process.env.UPLOAD_PRESET;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
+
+    try {
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+            method: "POST",
+            body: formData
+        });
+        const data = await res.json();
+        return data.secure_url; // ¡ESTA ES LA URL OFICIAL DE LA FOTO!
+    } catch (error) {
+        console.error("Error subiendo imagen a Cloudinary:", error);
+        return null;
+    }
+}
+
+
+// --- 5. GENERAR SQL (AHORA CON SUBIDA A LA NUBE) ---
+async function generarSQL() {
     const titulo = document.getElementById("input-titulo").value.trim();
     const resumen = document.getElementById("input-resumen").value.trim();
     const autor = document.getElementById("input-autor").value;
     const categoria = document.getElementById("input-categoria").value;
     const archivoPortada = document.getElementById("input-portada").files[0];
     
-    if (!titulo || !resumen) return alert("Falta el título o el resumen");
+    if (!titulo || !resumen) return alert("Falta el título o el resumen 💅");
 
-    // Lógica para nombre de archivo en SQL
-    const portadaStr = archivoPortada ? `URL_CLOUDINARY_AQUI/${archivoPortada.name}` : '';
-    const slug = titulo.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-    const fecha = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    const contenidoHTML = generarHTMLdelContenido('sql');
+    // Cambiar estado del botón para que el usuario espere
+    const btnSQL = document.querySelector(".btn-green");
+    const textoOriginal = btnSQL.textContent;
+    btnSQL.textContent = "⏳ Subiendo fotos a la nube... ¡Soporten!";
+    btnSQL.disabled = true;
+    btnSQL.style.opacity = "0.7";
 
-    // Escapar comillas simples para SQL
-    const tituloSQL = titulo.replace(/'/g, "''");
-    const resumenSQL = resumen.replace(/'/g, "''");
-    const contenidoSQL = contenidoHTML.replace(/'/g, "''");
+    try {
+        // 1. SUBIR PORTADA
+        let urlPortadaFinal = "";
+        if (archivoPortada) {
+            urlPortadaFinal = await subirACloudinary(archivoPortada);
+            if (!urlPortadaFinal) throw new Error("Falló la subida de la portada");
+        }
 
-    const sql = `INSERT INTO noticias (titulo, slug, resumen, contenido, portada, fecha_publicacion, autor_id, categoria_id) VALUES\n('${tituloSQL}', '${slug}', '${resumenSQL}', '${contenidoSQL}', '${portadaStr}', '${fecha}', ${autor}, ${categoria});`;
+        // 2. SUBIR IMÁGENES DEL CONTENIDO
+        const bloques = document.querySelectorAll(".block-card");
+        for (let bloque of bloques) {
+            const fileInput = bloque.querySelector('input[type="file"]');
+            const hiddenInput = bloque.querySelector('.bloque-input[data-tipo="img"]');
+            
+            // Si hay un archivo seleccionado en este bloque
+            if (fileInput && fileInput.files[0]) {
+                const urlReal = await subirACloudinary(fileInput.files[0]);
+                if (urlReal) {
+                    // Reemplazamos la URL temporal (blob) por la oficial de Cloudinary
+                    hiddenInput.value = urlReal; 
+                }
+            }
+        }
 
-    document.getElementById("output-sql").value = sql;
+        // 3. GENERAR EL HTML YA CON LAS URLS REALES
+        const contenidoHTML = generarHTMLdelContenido();
+        const slug = titulo.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+        const fecha = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+        // Escapar comillas simples para SQL
+        const tituloSQL = titulo.replace(/'/g, "''");
+        const resumenSQL = resumen.replace(/'/g, "''");
+        const contenidoSQL = contenidoHTML.replace(/'/g, "''");
+
+        // Construir SQL Final
+        const sql = `INSERT INTO noticias (titulo, slug, resumen, contenido, portada, fecha_publicacion, autor_id, categoria_id) VALUES\n('${tituloSQL}', '${slug}', '${resumenSQL}', '${contenidoSQL}', '${urlPortadaFinal}', '${fecha}', ${autor}, ${categoria});`;
+
+        document.getElementById("output-sql").value = sql;
+        
+        // Auto-copiar
+        navigator.clipboard.writeText(sql).then(() => {
+            alert("✨ ¡Imágenes en Cloudinary y SQL Generado y copiado al portapapeles! ✨ Devoraste.");
+        });
+
+    } catch (error) {
+        alert("Ocurrió un error subiendo las imágenes. Revisa la consola.");
+        console.error(error);
+    } finally {
+        // Restaurar el botón
+        btnSQL.textContent = textoOriginal;
+        btnSQL.disabled = false;
+        btnSQL.style.opacity = "1";
+    }
 }
