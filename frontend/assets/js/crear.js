@@ -228,71 +228,83 @@ async function subirACloudinary(file) {
 
 
 // --- 5. GENERAR SQL (AHORA CON SUBIDA A LA NUBE) ---
-async function generarSQL() {
+async function publicarNoticia() {
     const titulo = document.getElementById("input-titulo").value.trim();
     const resumen = document.getElementById("input-resumen").value.trim();
     const autor = document.getElementById("input-autor").value;
     const categoria = document.getElementById("input-categoria").value;
     const archivoPortada = document.getElementById("input-portada").files[0];
+    
+    if (!titulo || !resumen) return alert("Falta el título o el resumen");
 
-    if (!titulo || !resumen) return alert("Falta el título o el resumen 💅");
-
-    // Cambiar estado del botón para que el usuario espere
     const btnSQL = document.querySelector(".btn-green");
     const textoOriginal = btnSQL.textContent;
-    btnSQL.textContent = "⏳ Subiendo fotos a la nube... ¡Soporten!";
+    btnSQL.textContent = "⏳ Subiendo e insertando... ¡Soporten!";
     btnSQL.disabled = true;
     btnSQL.style.opacity = "0.7";
 
     try {
-        // 1. SUBIR PORTADA
+        // 1. SUBIMOS LAS FOTOS A CLOUDINARY (Tu código intacto)
         let urlPortadaFinal = "";
         if (archivoPortada) {
             urlPortadaFinal = await subirACloudinary(archivoPortada);
             if (!urlPortadaFinal) throw new Error("Falló la subida de la portada");
         }
 
-        // 2. SUBIR IMÁGENES DEL CONTENIDO
         const bloques = document.querySelectorAll(".block-card");
         for (let bloque of bloques) {
             const fileInput = bloque.querySelector('input[type="file"]');
             const hiddenInput = bloque.querySelector('.bloque-input[data-tipo="img"]');
-
-            // Si hay un archivo seleccionado en este bloque
             if (fileInput && fileInput.files[0]) {
                 const urlReal = await subirACloudinary(fileInput.files[0]);
-                if (urlReal) {
-                    // Reemplazamos la URL temporal (blob) por la oficial de Cloudinary
-                    hiddenInput.value = urlReal;
-                }
+                if (urlReal) hiddenInput.value = urlReal; 
             }
         }
 
-        // 3. GENERAR EL HTML YA CON LAS URLS REALES
-        const contenidoHTML = generarHTMLdelContenido();
+        // 2. ARMAMOS EL PAQUETE DE DATOS
+        const contenidoHTML = generarHTMLdelContenido('preview'); // Ya no es 'sql', queremos el HTML final limpio
         const slug = titulo.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-        const fecha = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-        // Escapar comillas simples para SQL
-        const tituloSQL = titulo.replace(/'/g, "''");
-        const resumenSQL = resumen.replace(/'/g, "''");
-        const contenidoSQL = contenidoHTML.replace(/'/g, "''");
+        const paqueteNoticia = {
+            titulo: titulo,
+            slug: slug,
+            resumen: resumen,
+            contenido: contenidoHTML,
+            portada: urlPortadaFinal,
+            autor: autor,
+            categoria: categoria
+        };
 
-        // Construir SQL Final
-        const sql = `INSERT INTO noticias (titulo, slug, resumen, contenido, portada, fecha_publicacion, autor_id, categoria_id) VALUES\n('${tituloSQL}', '${slug}', '${resumenSQL}', '${contenidoSQL}', '${urlPortadaFinal}', '${fecha}', ${autor}, ${categoria});`;
+        // 3. SACAMOS EL GAFETE VIP (El token guardado del login)
+        const token = localStorage.getItem("entrelineas_token");
+        if (!token) throw new Error("No tienes sesión iniciada.");
 
-        document.getElementById("output-sql").value = sql;
-
-        // Auto-copiar
-        navigator.clipboard.writeText(sql).then(() => {
-            alert("✨ ¡Imágenes en Cloudinary y SQL Generado y copiado al portapapeles! ✨ Devoraste.");
+        // 4. DISPARAMOS AL BACKEND
+        const respuestaBD = await fetch(`${API_BASE}/noticias`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}` // Mostramos el gafete al cadenero
+            },
+            body: JSON.stringify(paqueteNoticia)
         });
 
+        const data = await respuestaBD.json();
+
+        if (!respuestaBD.ok) {
+            throw new Error(data.error || "Error al publicar en la Base de Datos");
+        }
+
+        // ¡Y LA QUESO! Terminamos.
+        alert(`✨ ${data.mensaje} ✨\n\nNoticia insertada con éxito en la base de datos.`);
+        
+        // Opcional: Redirigir al dashboard para ver el triunfo
+        window.location.replace("dashboard.html");
+
     } catch (error) {
-        alert("Ocurrió un error subiendo las imágenes. Revisa la consola.");
+        alert("Ocurrió un error. Revisa la consola: " + error.message);
         console.error(error);
     } finally {
-        // Restaurar el botón
         btnSQL.textContent = textoOriginal;
         btnSQL.disabled = false;
         btnSQL.style.opacity = "1";

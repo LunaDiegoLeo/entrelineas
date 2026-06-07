@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { pool } from "../config/db.js"; 
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || "super_secreto_desarrollo_123";
+const JWT_SECRET = process.env.JWT_SECRET;
 
 router.post("/login", async (req, res) => {
     const { usuario, password } = req.body;
@@ -25,7 +25,6 @@ router.post("/login", async (req, res) => {
             { expiresIn: '8h' }
         );
 
-        // Devolvemos el token en el JSON, ya no usamos res.cookie
         res.json({ mensaje: "Login exitoso", token: token });
 
     } catch (error) {
