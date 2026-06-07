@@ -148,8 +148,8 @@ function actualizarVistaPrevia() {
 
 // --- NUEVO: FUNCIÓN PARA SUBIR A CLOUDINARY ---
 async function subirACloudinary(file) {
-    const CLOUD_NAME = process.env.CLOUD_NAME;
-    const UPLOAD_PRESET = process.env.UPLOAD_PRESET;
+    const CLOUD_NAME = "dd86ahlsj"; 
+    const UPLOAD_PRESET = "entrelineas_preset"; 
 
     const formData = new FormData();
     formData.append("file", file);
