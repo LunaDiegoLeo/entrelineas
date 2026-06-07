@@ -5,12 +5,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const resCat = await fetch('https://entrelineas.onrender.com/api/categorias'); 
         const categorias = await resCat.json();
         const selectCat = document.getElementById("input-categoria");
-        selectCat.innerHTML = categorias.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+        selectCat.innerHTML = categorias.map(c => `<option value="${c.id_categoria}">${c.nombre}</option>`).join('');
 
         const resAutores = await fetch('https://entrelineas.onrender.com/api/autores');
         const autores = await resAutores.json();
         const selectAutor = document.getElementById("input-autor");
-        selectAutor.innerHTML = autores.map(a => `<option value="${a.id}">${a.nombre}</option>`).join('');
+        selectAutor.innerHTML = autores.map(a => `<option value="${a.id_autor}">${a.nombre_autor}</option>`).join('');
 
         actualizarMetaPreview();
     } catch (error) {
