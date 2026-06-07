@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entre Líneas | Creador de Columnas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Permanent+Marker&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script>
+        if (!localStorage.getItem("entrelineas_token")) window.location.replace("login.html");
+    </script>
+    <style>
+        /* Estilos para la pantalla dividida */
+        .editor-container { display: flex; height: 100vh; overflow: hidden; }
+        .editor-panel { width: 50%; padding: 20px; overflow-y: auto; background: #f4f4f4; border-right: 3px solid #000; }
+        .preview-panel { width: 50%; overflow-y: auto; background: #fff; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { font-family: 'Space Grotesk', sans-serif; font-weight: bold; display: block; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 2px solid #000; margin-top: 5px; font-family: 'Courier Prime', monospace; }
+        .block-card { background: white; border: 2px dashed #666; padding: 15px; margin-bottom: 10px; position: relative; }
+        .block-card button.delete-btn { position: absolute; top: 5px; right: 5px; background: red; color: white; border: none; cursor: pointer; font-weight: bold; }
+        .toolbar-btn { cursor: pointer; padding: 5px 10px; border: 2px solid #000; background: #c8a2c8; font-weight: bold; margin-right: 5px; margin-bottom: 5px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="editor-container">
+        <div class="editor-panel">
+            <h2 class="marker-text" style="margin-bottom: 20px;">Redacción</h2>
+            
+            <div class="cutout-box" style="padding: 20px; margin-bottom: 20px;">
+                <div class="form-group">
+                    <label>Título:</label>
+                    <input type="text" id="input-titulo" placeholder="Ej. La fotografía como acto político">
+                </div>
+                <div class="form-group">
+                    <label>Resumen:</label>
+                    <textarea id="input-resumen" rows="3" placeholder="Un breve adelanto..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>URL de Portada (Provisional):</label>
+                    <input type="text" id="input-portada" placeholder="https://...">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>Autor ID:</label>
+                        <select id="input-autor">
+                            <option value="1">1 - Admin</option>
+                            <option value="2" selected>2 - Christofher</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Categoría ID:</label>
+                        <select id="input-categoria">
+                            <option value="1">1 - Tecnología</option>
+                            <option value="2" selected>2 - Cultura</option>
+                            <option value="3">3 - Opinión</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="marker-text" style="font-size: 1.5rem; margin-bottom: 10px;">Contenido</h3>
+            <div style="margin-bottom: 15px;">
+                <button class="toolbar-btn" onclick="agregarBloque('parrafo')">+ Párrafo</button>
+                <button class="toolbar-btn" onclick="agregarBloque('subtitulo')">+ Subtítulo (H2)</button>
+                <button class="toolbar-btn" onclick="agregarBloque('cita')">+ Cita</button>
+                <button class="toolbar-btn" onclick="agregarBloque('imagen')">+ Imagen</button>
+            </div>
+
+            <div id="bloques-container"></div>
+
+            <div style="margin-top: 30px; border-top: 2px solid #000; padding-top: 20px;">
+                <button class="btn btn-green" style="width: 100%; margin-bottom: 10px;" onclick="generarSQL()">Generar SQL</button>
+                <textarea id="output-sql" rows="6" style="width: 100%; border: 2px solid #000; font-family: monospace; font-size: 0.8rem; background: #e0e0e0;" readonly placeholder="Aquí aparecerá el INSERT..."></textarea>
+            </div>
+            
+            <br><a href="dashboard.html" style="color: red; text-decoration: none; font-weight: bold;">← Cancelar y salir</a>
+        </div>
+
+        <div class="preview-panel">
+            <header class="article-hero cutout-box">
+                <span id="preview-categoria" class="category-tag">Cultura</span>
+                <h1 id="preview-titulo" class="article-title marker-text">Aquí aparecerá el título</h1>
+                <p id="preview-resumen" class="article-subtitle">Aquí aparecerá el resumen</p>
+                <div class="article-meta">
+                    <div class="author-info">
+                        <div>
+                            <h4>Autor ID: <span id="preview-autor">2</span></h4>
+                            <span><b>Publicado el:</b> <span id="preview-fecha">Hoy</span></span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <main class="article-layout" style="display: block;">
+                <article class="article-content cutout-box">
+                    <img id="preview-portada" class="cover-image" src="" alt="Portada" style="display: none;">
+                    
+                    <div id="preview-contenido"></div>
+                </article>
+            </main>
+        </div>
+    </div>
+
+    <script src="assets/js/crear.js"></script>
+</body>
+</html>
