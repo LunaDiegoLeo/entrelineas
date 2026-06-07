@@ -177,7 +177,7 @@ async function subirACloudinary(file) {
             body: formData
         });
         const data = await res.json();
-        return data.secure_url.replace("/upload/", "/upload/f_auto,q_auto,w_1200/");
+        return data.secure_url.replace("/upload/", "/upload/c_scale,w_1200/f_webp/q_auto/"); // Optimización automática para web
     } catch (error) {
         console.error("Error subiendo imagen a Cloudinary:", error);
         return null;
