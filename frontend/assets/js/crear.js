@@ -1,24 +1,52 @@
-// VARIABLES GLOBALES
+// --- 1. CARGA DE API AL INICIAR ---
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        // IMPORTANTE: Cambia estas URLs por tus endpoints reales
+        const resCat = await fetch('https://entrelineas.onrender.com/api/categorias'); 
+        const categorias = await resCat.json();
+        const selectCat = document.getElementById("input-categoria");
+        selectCat.innerHTML = categorias.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+
+        const resAutores = await fetch('https://entrelineas.onrender.com/api/autores');
+        const autores = await resAutores.json();
+        const selectAutor = document.getElementById("input-autor");
+        selectAutor.innerHTML = autores.map(a => `<option value="${a.id}">${a.nombre}</option>`).join('');
+
+        actualizarMetaPreview();
+    } catch (error) {
+        console.error("No se pudo conectar a la API:", error);
+    }
+});
+
+// --- 2. LISTENERS GLOBALES ---
+document.getElementById("input-titulo").addEventListener("input", (e) => document.getElementById("preview-titulo").textContent = e.target.value || "Título...");
+document.getElementById("input-resumen").addEventListener("input", (e) => document.getElementById("preview-resumen").textContent = e.target.value || "Resumen...");
+document.getElementById("input-categoria").addEventListener("change", actualizarMetaPreview);
+document.getElementById("input-autor").addEventListener("change", actualizarMetaPreview);
+
+function actualizarMetaPreview() {
+    const selCat = document.getElementById("input-categoria");
+    const selAutor = document.getElementById("input-autor");
+    if(selCat.options.length > 0) document.getElementById("preview-categoria").textContent = selCat.options[selCat.selectedIndex].text;
+    if(selAutor.options.length > 0) document.getElementById("preview-autor").textContent = selAutor.options[selAutor.selectedIndex].text;
+}
+
+// Pre-visualizar Portada
+document.getElementById("input-portada").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    const img = document.getElementById("preview-portada");
+    if (file) {
+        img.src = URL.createObjectURL(file);
+        img.style.display = "block";
+    } else {
+        img.style.display = "none";
+    }
+});
+
+// --- 3. GESTIÓN DE BLOQUES ---
 const bloquesContainer = document.getElementById("bloques-container");
-const previewContenido = document.getElementById("preview-contenido");
 let contadorBloques = 0;
 
-// ESCUCHADORES EN TIEMPO REAL (Para el panel izquierdo)
-document.getElementById("input-titulo").addEventListener("input", (e) => {
-    document.getElementById("preview-titulo").textContent = e.target.value || "Aquí aparecerá el título";
-});
-
-document.getElementById("input-resumen").addEventListener("input", (e) => {
-    document.getElementById("preview-resumen").textContent = e.target.value || "Aquí aparecerá el resumen";
-});
-
-document.getElementById("input-portada").addEventListener("input", (e) => {
-    const img = document.getElementById("preview-portada");
-    img.src = e.target.value;
-    img.style.display = e.target.value ? "block" : "none";
-});
-
-// SISTEMA DE BLOQUES
 function agregarBloque(tipo) {
     contadorBloques++;
     const id = `bloque-${contadorBloques}`;
@@ -26,24 +54,33 @@ function agregarBloque(tipo) {
     div.className = "block-card";
     div.id = id;
 
-    let innerHTML = `<button class="delete-btn" onclick="borrarBloque('${id}')">X</button>`;
+    let inner = `<button class="delete-btn" onclick="borrarBloque('${id}')">X</button>`;
 
     if (tipo === 'parrafo') {
-        innerHTML += `<label>Párrafo:</label>
-                      <textarea class="bloque-input" data-tipo="p" rows="4" oninput="actualizarVistaPrevia()"></textarea>`;
+        inner += `<label>Párrafo:</label>
+                  <textarea class="bloque-input" data-tipo="p" rows="4" placeholder="Permite etiquetas como <b>texto</b>" style="width:100%;" oninput="actualizarVistaPrevia()"></textarea>`;
     } else if (tipo === 'subtitulo') {
-        innerHTML += `<label>Subtítulo (H2):</label>
-                      <input type="text" class="bloque-input" data-tipo="h2" oninput="actualizarVistaPrevia()">`;
+        inner += `<label>Subtítulo (H2):</label>
+                  <input type="text" class="bloque-input" data-tipo="h2" style="width:100%;" oninput="actualizarVistaPrevia()">`;
     } else if (tipo === 'cita') {
-        innerHTML += `<label>Cita Blockquote:</label>
-                      <textarea class="bloque-input" data-tipo="blockquote" rows="2" oninput="actualizarVistaPrevia()"></textarea>`;
+        inner += `<label>Cita (Blockquote):</label>
+                  <textarea class="bloque-input" data-tipo="blockquote" rows="2" style="width:100%;" oninput="actualizarVistaPrevia()"></textarea>`;
+    } else if (tipo === 'tarjeta-estilo') {
+        inner += `<label>Tarjeta (Gris con padding):</label>
+                  <textarea class="bloque-input" data-tipo="card-estilo" rows="4" placeholder="Admite texto, \\n y etiquetas HTML" style="width:100%;" oninput="actualizarVistaPrevia()"></textarea>`;
+    } else if (tipo === 'tarjeta-simple') {
+        inner += `<label>Tarjeta (Sin estilo interno):</label>
+                  <textarea class="bloque-input" data-tipo="card-simple" rows="4" placeholder="Admite texto, \\n y etiquetas HTML" style="width:100%;" oninput="actualizarVistaPrevia()"></textarea>`;
     } else if (tipo === 'imagen') {
-        innerHTML += `<label>URL de Imagen Interna:</label>
-                      <input type="text" class="bloque-input" data-tipo="img" placeholder="https://..." oninput="actualizarVistaPrevia()">
-                      <input type="text" class="bloque-input mt-2" data-tipo="img-alt" placeholder="Descripción de la imagen (Alt)" oninput="actualizarVistaPrevia()">`;
+        inner += `<label>Imagen de Contenido:</label>
+                  <input type="file" accept="image/*" onchange="previewImagenBloque(this)">
+                  <!-- Inputs ocultos para guardar la data -->
+                  <input type="hidden" class="bloque-input" data-tipo="img">
+                  <input type="text" class="bloque-input mt-2" data-tipo="img-alt" placeholder="Pie de foto / Alt" style="width:100%; margin-top:10px;" oninput="actualizarVistaPrevia()">
+                  <img class="img-preview-temp" style="width: 100px; display: none; margin-top: 10px;">`;
     }
 
-    div.innerHTML = innerHTML;
+    div.innerHTML = inner;
     bloquesContainer.appendChild(div);
 }
 
@@ -52,79 +89,90 @@ function borrarBloque(id) {
     actualizarVistaPrevia();
 }
 
-// CONVERTIR LOS BLOQUES A HTML PURO (Para vista previa y SQL)
-function generarHTMLdelContenido() {
-    let htmlFinal = "";
-    const bloques = document.querySelectorAll(".block-card");
+function previewImagenBloque(input) {
+    const file = input.files[0];
+    if (file) {
+        const url = URL.createObjectURL(file);
+        const hiddenVal = input.nextElementSibling;
+        hiddenVal.value = url; // Guardamos URL temporal
+        hiddenVal.setAttribute('data-filename', file.name); // Guardamos nombre real para SQL
+        
+        const imgNode = input.parentElement.querySelector('.img-preview-temp');
+        imgNode.src = url;
+        imgNode.style.display = "block";
+        
+        actualizarVistaPrevia();
+    }
+}
 
-    bloques.forEach(bloque => {
+// --- 4. GENERADOR DE HTML (Preview y SQL) ---
+function generarHTMLdelContenido(modo = 'preview') {
+    let htmlFinal = "";
+    document.querySelectorAll(".block-card").forEach(bloque => {
         const inputs = bloque.querySelectorAll(".bloque-input");
         const tipo = inputs[0].getAttribute("data-tipo");
         let valor = inputs[0].value.trim();
 
-        if (!valor) return;
+        if (!valor && tipo !== 'img') return;
 
-        // Convertir saltos de línea (\n) en etiquetas <br>
-        valor = valor.replace(/\n/g, "<br>");
+        // Reemplazar \n por <br>
+        const textoBr = valor.replace(/\n/g, "<br>");
 
         if (tipo === "p") {
-            htmlFinal += `<p>\n    ${valor}\n</p>\n\n`;
+            htmlFinal += `<p>\n    ${textoBr}\n</p>\n\n`;
         } else if (tipo === "h2") {
             htmlFinal += `<h2>${valor}</h2>\n\n`;
         } else if (tipo === "blockquote") {
             htmlFinal += `<blockquote>\n    <b>${valor}</b>\n</blockquote>\n\n`;
+        } else if (tipo === "card-estilo") {
+            htmlFinal += `<div class="inline-card" style="background-color: #f0f0f0; padding: 15px; border-radius: 8px; margin: 20px 0;">\n    ${textoBr}\n</div>\n\n`;
+        } else if (tipo === "card-simple") {
+            htmlFinal += `<div class="inline-card">\n    ${textoBr}\n</div>\n\n`;
         } else if (tipo === "img") {
             const altText = inputs[1].value.trim();
-            htmlFinal += `<img class="cover-image" src="${valor}" style="width: 80%; display: block; margin: 0 auto;" alt="${altText}">\n`;
+            let imgSrc = valor; 
+            
+            // Si es para SQL, inyectamos un marcador en vez de la URL blob temporal
+            if (modo === 'sql') {
+                const fName = inputs[0].getAttribute('data-filename') || 'imagen.jpg';
+                imgSrc = `URL_CLOUDINARY_AQUI/${fName}`;
+            }
+
+            htmlFinal += `<img class="cover-image" src="${imgSrc}" style="width: 80%; display: block; margin: 0 auto;" alt="${altText}">\n`;
             if (altText) {
-                htmlFinal += `<p style="text-align: center; font-style: italic; margin-top: 10px; font-size: 0.9rem;">${altText}</p>\n\n`;
+                htmlFinal += `<p style="text-align: center; font-style: italic; margin-top: 10px; font-size: 0.9rem;">\n    ${altText}\n</p>\n\n`;
             }
         }
     });
-
     return htmlFinal;
 }
 
-// ACTUALIZAR LA VISTA PREVIA DEL CONTENIDO
 function actualizarVistaPrevia() {
-    previewContenido.innerHTML = generarHTMLdelContenido();
+    document.getElementById("preview-contenido").innerHTML = generarHTMLdelContenido('preview');
 }
 
-// GENERAR EL SCRIPT SQL
+// --- 5. GENERAR SQL FINAL ---
 function generarSQL() {
     const titulo = document.getElementById("input-titulo").value.trim();
     const resumen = document.getElementById("input-resumen").value.trim();
-    const portada = document.getElementById("input-portada").value.trim();
     const autor = document.getElementById("input-autor").value;
     const categoria = document.getElementById("input-categoria").value;
+    const archivoPortada = document.getElementById("input-portada").files[0];
     
-    if (!titulo || !resumen) {
-        alert("Falta el título o el resumen");
-        return;
-    }
+    if (!titulo || !resumen) return alert("Falta el título o el resumen");
 
-    // Generar Slug (minúsculas, guiones en vez de espacios)
+    // Lógica para nombre de archivo en SQL
+    const portadaStr = archivoPortada ? `URL_CLOUDINARY_AQUI/${archivoPortada.name}` : '';
     const slug = titulo.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-
-    // Generar Fecha Actual (Formato YYYY-MM-DD HH:MM:SS)
     const fecha = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    const contenidoHTML = generarHTMLdelContenido('sql');
 
-    // Obtener HTML del contenido
-    const contenidoHTML = generarHTMLdelContenido();
-
-    // Escapar comillas simples (') para evitar errores de SQL
+    // Escapar comillas simples para SQL
     const tituloSQL = titulo.replace(/'/g, "''");
     const resumenSQL = resumen.replace(/'/g, "''");
     const contenidoSQL = contenidoHTML.replace(/'/g, "''");
 
-    // Construir el INSERT
-    const sql = `INSERT INTO noticias (titulo, slug, resumen, contenido, portada, fecha_publicacion, autor_id, categoria_id) VALUES\n('${tituloSQL}', '${slug}', '${resumenSQL}', '${contenidoSQL}', '${portada}', '${fecha}', ${autor}, ${categoria});`;
+    const sql = `INSERT INTO noticias (titulo, slug, resumen, contenido, portada, fecha_publicacion, autor_id, categoria_id) VALUES\n('${tituloSQL}', '${slug}', '${resumenSQL}', '${contenidoSQL}', '${portadaStr}', '${fecha}', ${autor}, ${categoria});`;
 
-    // Mostrar en el textarea
     document.getElementById("output-sql").value = sql;
-    
-    // Auto-copiar al portapapeles por comodidad
-    navigator.clipboard.writeText(sql).then(() => {
-        alert("¡SQL Generado y copiado al portapapeles! 💅✨");
-    });
 }
