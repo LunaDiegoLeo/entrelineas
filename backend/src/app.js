@@ -4,12 +4,13 @@ dotenv.config();
 
 import express from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser"; // NUEVO
+import cookieParser from "cookie-parser"; 
 
 import noticiasRoutes from "../routes/noticias.routes.js";
 import autoresRoutes from "../routes/autores.routes.js";
 import categoriasRoutes from "../routes/categorias.routes.js";
 import authRoutes from "../routes/auth.routes.js"; 
+import uploadRoutes from "../routes/upload.routes.js";
 
 const app = express();
 
@@ -25,6 +26,8 @@ app.use("/api/noticias", noticiasRoutes);
 app.use("/api/autores", autoresRoutes);
 app.use("/api/categorias", categoriasRoutes);
 app.use("/api/auth", authRoutes); 
+app.use("/api/upload", uploadRoutes);
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

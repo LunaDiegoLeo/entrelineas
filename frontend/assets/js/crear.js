@@ -216,30 +216,38 @@ function actualizarVistaPrevia() {
 }
 
 
-// --- NUEVO: FUNCIÓN PARA SUBIR A CLOUDINARY ---
 async function subirACloudinary(file) {
-    const CLOUD_NAME = "dd86ahlsj";
-    const UPLOAD_PRESET = "entrelineas_preset";
-
     const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", UPLOAD_PRESET);
+    formData.append("imagen", file); 
+
+    const token = localStorage.getItem("entrelineas_token");
 
     try {
-        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+        // Le pegamos a TU ruta protegida
+        const res = await fetch(`${API_BASE}/upload`, {
             method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            },
             body: formData
         });
+
         const data = await res.json();
-        return data.secure_url.replace("/upload/", "/upload/c_scale,w_1200/f_webp/q_auto/"); // Optimización automática para web
+        
+        if (!res.ok) {
+            console.error("El backend rechazó la imagen:", data.error);
+            return null;
+        }
+        
+        return data.secure_url; 
+        
     } catch (error) {
-        console.error("Error subiendo imagen a Cloudinary:", error);
+        console.error("Error conectando con el backend para subir imagen:", error);
         return null;
     }
 }
 
 
-// --- 5. GENERAR SQL (AHORA CON SUBIDA A LA NUBE) ---
 async function publicarNoticia() {
     const titulo = document.getElementById("input-titulo").value.trim();
     const resumen = document.getElementById("input-resumen").value.trim();
@@ -256,7 +264,6 @@ async function publicarNoticia() {
     btnSQL.style.opacity = "0.7";
 
     try {
-        // 1. SUBIMOS LAS FOTOS A CLOUDINARY (Tu código intacto)
         let urlPortadaFinal = "";
         if (archivoPortada) {
             urlPortadaFinal = await subirACloudinary(archivoPortada);
@@ -273,8 +280,7 @@ async function publicarNoticia() {
             }
         }
 
-        // 2. ARMAMOS EL PAQUETE DE DATOS
-        const contenidoHTML = generarHTMLdelContenido('preview'); // Ya no es 'sql', queremos el HTML final limpio
+        const contenidoHTML = generarHTMLdelContenido('preview');
         const slug = titulo.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
         const paqueteNoticia = {
@@ -287,16 +293,14 @@ async function publicarNoticia() {
             categoria: categoria
         };
 
-        // 3. SACAMOS EL GAFETE VIP (El token guardado del login)
         const token = localStorage.getItem("entrelineas_token");
         if (!token) throw new Error("No tienes sesión iniciada.");
 
-        // 4. DISPARAMOS AL BACKEND
         const respuestaBD = await fetch(`${API_BASE}/noticias`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}` // Mostramos el gafete al cadenero
+                "Authorization": `Bearer ${token}` 
             },
             body: JSON.stringify(paqueteNoticia)
         });
@@ -307,10 +311,8 @@ async function publicarNoticia() {
             throw new Error(data.error || "Error al publicar en la Base de Datos");
         }
 
-        // ¡Y LA QUESO! Terminamos.
-        alert(`✨ ${data.mensaje} ✨\n\nNoticia insertada con éxito en la base de datos.`);
+        alert(`${data.mensaje}\n\nNoticia insertada con éxito en la base de datos.`);
         
-        // Opcional: Redirigir al dashboard para ver el triunfo
         window.location.replace("dashboard.html");
 
     } catch (error) {
@@ -323,7 +325,6 @@ async function publicarNoticia() {
     }
 }
 
-// --- LÓGICA DE LA VENTANA EMERGENTE (MODAL) ---
 let bloqueActivoId = null;
 let formatoActivo = null;
 
@@ -333,7 +334,6 @@ function abrirModal(bloqueId, tipoFormato) {
     
     const textarea = document.querySelector(`#${bloqueId} textarea`);
     
-    // Si el usuario ya había seleccionado un pedazo de texto, lo atrapamos
     const textoSeleccionado = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
     
     const modal = document.getElementById('formato-modal');
@@ -345,13 +345,12 @@ function abrirModal(bloqueId, tipoFormato) {
     inputTexto.value = textoSeleccionado || "";
     inputUrl.value = "";
 
-    // Configurar la ventana según el botón que apretó
     if (tipoFormato === 'a') {
-        titulo.innerHTML = 'Insertar Enlace 🔗';
+        titulo.innerHTML = 'Insertar Enlace';
         grupoUrl.style.display = 'block';
     } else {
         const nombre = tipoFormato === 'b' ? 'Negritas' : (tipoFormato === 'i' ? 'Cursivas' : 'Subrayado');
-        titulo.innerHTML = `Insertar ${nombre} ✨`;
+        titulo.innerHTML = `Insertar ${nombre} `;
         grupoUrl.style.display = 'none';
     }
 
@@ -367,11 +366,11 @@ function inyectarFormato() {
     const texto = document.getElementById('modal-texto').value.trim();
     const url = document.getElementById('modal-url').value.trim();
     
-    if (!texto) return alert("Debes escribir un texto, mi ciela 💅");
+    if (!texto) return alert("Debes escribir un texto, mi ciela");
 
     let codigoAInyectar = "";
     if (formatoActivo === 'a') {
-        if (!url) return alert("Falta la URL del enlace 🔗");
+        if (!url) return alert("Falta la URL del enlace");
         codigoAInyectar = `<a href="${url}" target="_blank">${texto}</a>`;
     } else {
         codigoAInyectar = `<${formatoActivo}>${texto}</${formatoActivo}>`;
