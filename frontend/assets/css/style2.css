@@ -520,13 +520,17 @@ img {
     .cat4 { top: -25px; right: 5%; } /* El único sobreviviente del footer */
 }
 
+/* 1. 🌙 La magia automática principal (Sigue igual) */
 html.dark-mode-auto {
   filter: invert(1) hue-rotate(180deg);
 }
 
-/* 📸 Doble inversión para que las fotos y logos se vean NORMALES */
-html.dark-mode-auto img, 
+/* 2. 🚫 La lista de EXCLUSIONES VIP (Aquí está el truco pro) */
+/* Agregamos las clases específicas de tus autores y portadas */
+html.dark-mode-auto img,
 html.dark-mode-auto video,
-html.dark-mode-auto iframe {
-  filter: invert(1) hue-rotate(180deg);
+html.dark-mode-auto iframe,
+html.dark-mode-auto .polaroid-img,    /* <-- Reemplaza con la clase de tus fotos de autor */
+html.dark-mode-auto .card-image {   /* <-- Reemplaza con la clase de tus imágenes de portada */
+  filter: invert(1) hue-rotate(180deg) !important; /* Volvemos a invertir para que se vean NORMALES */
 }
