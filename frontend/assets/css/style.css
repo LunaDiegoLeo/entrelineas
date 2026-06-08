@@ -1135,6 +1135,6 @@ html.dark-mode-auto {
 html.dark-mode-auto img, 
 html.dark-mode-auto video,
 html.dark-mode-auto iframe,
-html.dark-mode-auto .cutout-box {
+html.dark-mode-auto footer {
   filter: invert(1) hue-rotate(180deg);
 }
