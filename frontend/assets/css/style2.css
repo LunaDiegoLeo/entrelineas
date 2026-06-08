@@ -531,6 +531,7 @@ html.dark-mode-auto img,
 html.dark-mode-auto video,
 html.dark-mode-auto iframe,
 html.dark-mode-auto .polaroid-img,    /* <-- Reemplaza con la clase de tus fotos de autor */
-html.dark-mode-auto .card-image {   /* <-- Reemplaza con la clase de tus imágenes de portada */
+html.dark-mode-auto .card-image,
+html.dark-mode-auto .cutout-box {   /* <-- Reemplaza con la clase de tus imágenes de portada */
   filter: invert(1) hue-rotate(180deg) !important; /* Volvemos a invertir para que se vean NORMALES */
 }

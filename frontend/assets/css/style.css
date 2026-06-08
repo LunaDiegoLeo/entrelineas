@@ -1134,6 +1134,7 @@ html.dark-mode-auto {
 /* 📸 Doble inversión para que las fotos y logos se vean NORMALES */
 html.dark-mode-auto img, 
 html.dark-mode-auto video,
-html.dark-mode-auto iframe {
+html.dark-mode-auto iframe,
+html.dark-mode-auto .cutout-box {
   filter: invert(1) hue-rotate(180deg);
 }
