@@ -519,3 +519,14 @@ img {
     /* Footer */
     .cat4 { top: -25px; right: 5%; } /* El único sobreviviente del footer */
 }
+
+html.dark-mode-auto {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* 📸 Doble inversión para que las fotos y logos se vean NORMALES */
+html.dark-mode-auto img, 
+html.dark-mode-auto video,
+html.dark-mode-auto iframe {
+  filter: invert(1) hue-rotate(180deg);
+}

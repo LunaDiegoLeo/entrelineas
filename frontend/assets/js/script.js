@@ -289,3 +289,36 @@ document.addEventListener(
 
     }
 );
+
+const html = document.documentElement;
+const btnTheme = document.getElementById('btn-theme'); 
+
+const sensorModoOscuro = window.matchMedia('(prefers-color-scheme: dark)');
+
+function aplicarTemaAutomatico(esOscuro) {
+  if (esOscuro) {
+    html.classList.add('dark-mode-auto');
+    if (btnTheme) btnTheme.innerHTML = '<i class="fa-solid fa-sun"></i>'; 
+  } else {
+    html.classList.remove('dark-mode-auto');
+    if (btnTheme) btnTheme.innerHTML = '<i class="fa-solid fa-moon"></i>'; 
+  }
+}
+
+aplicarTemaAutomatico(sensorModoOscuro.matches);
+
+sensorModoOscuro.addEventListener('change', (evento) => {
+  aplicarTemaAutomatico(evento.matches);
+});
+
+if (btnTheme) {
+  btnTheme.addEventListener('click', () => {
+    html.classList.toggle('dark-mode-auto');
+    
+    if (html.classList.contains('dark-mode-auto')) {
+      btnTheme.innerHTML = '<i class="fa-solid fa-sun"></i>';
+    } else {
+      btnTheme.innerHTML = '<i class="fa-solid fa-moon"></i>';
+    }
+  });
+}
