@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     } catch (error) {
         console.error("Acceso denegado:", error);
-        //window.location.replace("login.html"); 
+        window.location.replace("login.html"); 
     }
 
     const logoutBtn = document.getElementById("logoutBtn");
