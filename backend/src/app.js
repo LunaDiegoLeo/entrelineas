@@ -25,19 +25,8 @@ app.use(helmet({
     }
   }
 }));
-const origenesPermitidos = [
-    "https://entrelineas.onrender.com", 
-    "https://entre-lineas-f6ek.onrender.com"
-];
-
 app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || origenesPermitidos.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('CORS no permitido 💅'));
-        }
-    },
+    origin: "https://entre-lineas-f6ek.onrender.com", 
     credentials: true
 }));
 app.use((req, res, next) => {
@@ -51,7 +40,7 @@ app.use(cookieParser());
 const limitadorGeneral = rateLimit({
     windowMs: 15 * 60 * 1000, 
     max: 100, 
-    message: { error: "¡Tranquila beba! Estás recargando la página muy rápido. Toca soportar y esperar 15 minutos. 💅✨" },
+    message: { error: "¡Tranquila beba! Estás recargando la página muy rápido. Toca soportar y esperar 15 minutos." },
     standardHeaders: true, 
     legacyHeaders: false, 
 });

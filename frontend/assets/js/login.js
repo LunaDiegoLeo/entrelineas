@@ -2,6 +2,7 @@ const API_BASE = "https://entrelineas.onrender.com/api";
 const loginForm = document.getElementById("loginForm");
 const errorMsg = document.getElementById("error-msg");
 
+// En tu assets/js/login.js
 loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -13,14 +14,17 @@ loginForm.addEventListener("submit", async (e) => {
         const response = await fetch(`${API_BASE}/auth/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ usuario, password }),
-            credentials: "include" 
+            body: JSON.stringify({ usuario, password })
+            // OJO: Ya no lleva credentials: "include"
         });
 
         const data = await response.json();
 
-        if (!response.ok) throw new Error(data.error || "Error al iniciar sesión");
+        if (!response.ok) throw new Error(data.error);
 
+        // Guardamos el token en la memoria del navegador
+        localStorage.setItem("entrelineas_token", data.token);
+        
         window.location.replace("dashboard.html");
 
     } catch (error) {

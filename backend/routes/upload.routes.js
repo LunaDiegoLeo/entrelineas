@@ -15,16 +15,14 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 const verificarToken = (req, res, next) => {
-    const token = req.cookies.entrelineas_token;
-    
-    if (!token) return res.status(401).json({ error: "No tienes permiso" });
-    
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) return res.status(401).json({ error: "No tienes permiso 💅" });
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || "super_secreto_desarrollo_123");
+        const decoded = jwt.verify(authHeader.split(" ")[1], process.env.JWT_SECRET || "super_secreto_desarrollo_123");
         req.user = decoded; 
         next();
     } catch (error) {
-        return res.status(401).json({ error: "Token inválido o expirado." });
+        return res.status(401).json({ error: "Token inválido." });
     }
 };
 
