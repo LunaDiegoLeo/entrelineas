@@ -11,9 +11,22 @@ import autoresRoutes from "../routes/autores.routes.js";
 import categoriasRoutes from "../routes/categorias.routes.js";
 import authRoutes from "../routes/auth.routes.js"; 
 import uploadRoutes from "../routes/upload.routes.js";
-
+const helmet = require('helmet');
 const app = express();
-
+// 🛡️ El cadenero de seguridad (Helmet)
+app.use(helmet({
+  contentSecurityPolicy: {
+    useDefaults: true,
+    directives: {
+      "default-src": ["'self'"],
+      "script-src": ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com"],
+      "style-src": ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
+      "font-src": ["'self'", "https://cdnjs.cloudflare.com", "data:"],
+      "img-src": ["'self'", "data:", "https:"],
+      "connect-src": ["'self'", "https://www.google-analytics.com", "https://region1.google-analytics.com"]
+    }
+  }
+}));
 app.use(cors({
     origin: "https://entre-lineas-f6ek.onrender.com", 
     credentials: true
