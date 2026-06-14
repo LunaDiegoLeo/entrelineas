@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
-
+import helmet from 'helmet';
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser"; 
@@ -11,9 +11,7 @@ import autoresRoutes from "../routes/autores.routes.js";
 import categoriasRoutes from "../routes/categorias.routes.js";
 import authRoutes from "../routes/auth.routes.js"; 
 import uploadRoutes from "../routes/upload.routes.js";
-const helmet = require('helmet');
 const app = express();
-// 🛡️ El cadenero de seguridad (Helmet)
 app.use(helmet({
   contentSecurityPolicy: {
     useDefaults: true,
