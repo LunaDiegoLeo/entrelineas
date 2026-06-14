@@ -1,39 +1,35 @@
 const API_BASE = "https://entrelineas.onrender.com/api";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const token = localStorage.getItem("entrelineas_token");
-
-    if (!token) {
-        alert("Atrapado: No se encontró ningún token en el navegador.");
-        window.location.replace("login.html");
-        return;
-    }
-
     try {
+        
         const response = await fetch(`${API_BASE}/auth/verify`, {
             method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
+            credentials: "include" 
         });
 
         if (!response.ok) {
-            throw new Error("Sesión inválida");
+            throw new Error("Sesión inválida o cookie ausente");
         }
         
-        // ¡Éxito!
         document.body.style.display = "block";
 
     } catch (error) {
-        console.error("Error de verificación capturado:", error);
-        localStorage.removeItem("entrelineas_token");
-        window.location.replace("login.html"); // <-- Quítale los // para activarlo de nuevo
+        console.error("Acceso denegado:", error);
+        window.location.replace("login.html"); 
     }
 
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
-        logoutBtn.addEventListener("click", () => {
-            localStorage.removeItem("entrelineas_token");
+        logoutBtn.addEventListener("click", async () => {
+            try {
+                await fetch(`${API_BASE}/auth/logout`, {
+                    method: "POST",
+                    credentials: "include"
+                });
+            } catch (error) {
+                console.error("Error al cerrar sesión", error);
+            }
             window.location.replace("login.html");
         });
     }

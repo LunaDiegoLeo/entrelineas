@@ -25,30 +25,42 @@ router.post("/login", async (req, res) => {
             { expiresIn: '8h' }
         );
 
-        res.json({ mensaje: "Login exitoso", token: token });
+        res.cookie('entrelineas_token', token, {
+            httpOnly: true, 
+            secure: true,   
+            sameSite: 'none', 
+            maxAge: 8 * 60 * 60 * 1000 
+        });
+
+        res.json({ mensaje: "Login exitoso" });
 
     } catch (error) {
         res.status(500).json({ error: "Error en el servidor" });
     }
 });
 
-// NUEVO: Verificar leyendo los Headers
 router.get("/verify", (req, res) => {
-    // El frontend enviará el token en el formato "Bearer <token>"
-    const authHeader = req.headers.authorization;
+    const token = req.cookies.entrelineas_token;
     
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!token) {
         return res.status(401).json({ error: "No autorizado" });
     }
-
-    const token = authHeader.split(" ")[1]; // Extraemos solo el token
 
     try {
         jwt.verify(token, JWT_SECRET);
         res.status(200).json({ status: "ok" });
     } catch (error) {
-        res.status(401).json({ error: "Token inválido" });
+        res.status(401).json({ error: "Token inválido o expirado" });
     }
+});
+
+router.post("/logout", (req, res) => {
+    res.clearCookie("entrelineas_token", {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none'
+    });
+    res.json({ mensaje: "Sesión cerrada exitosamente" });
 });
 
 export default router;

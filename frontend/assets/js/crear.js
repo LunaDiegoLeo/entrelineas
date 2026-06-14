@@ -1,39 +1,36 @@
 const API_BASE = "https://entrelineas.onrender.com/api";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const token = localStorage.getItem("entrelineas_token");
-
-    if (!token) {
-        alert("Atrapado: No se encontró ningún token en el navegador.");
-        window.location.replace("login.html");
-        return;
-    }
-
     try {
+        // Le preguntamos al backend si nuestra cookie es válida
         const response = await fetch(`${API_BASE}/auth/verify`, {
             method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
+            credentials: "include" 
         });
 
         if (!response.ok) {
-            throw new Error("Sesión inválida");
+            throw new Error("Sesión inválida o cookie ausente");
         }
         
         // ¡Éxito!
         document.body.style.display = "block";
 
     } catch (error) {
-        console.error("Error de verificación capturado:", error);
-        localStorage.removeItem("entrelineas_token");
-        window.location.replace("login.html"); // <-- Quítale los // para activarlo de nuevo
+        console.error("Acceso denegado:", error);
+        window.location.replace("login.html"); 
     }
 
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
-        logoutBtn.addEventListener("click", () => {
-            localStorage.removeItem("entrelineas_token");
+        logoutBtn.addEventListener("click", async () => {
+            try {
+                await fetch(`${API_BASE}/auth/logout`, {
+                    method: "POST",
+                    credentials: "include"
+                });
+            } catch (error) {
+                console.error("Error al cerrar sesión", error);
+            }
             window.location.replace("login.html");
         });
     }
@@ -220,15 +217,10 @@ async function subirACloudinary(file) {
     const formData = new FormData();
     formData.append("imagen", file); 
 
-    const token = localStorage.getItem("entrelineas_token");
-
     try {
-        // Le pegamos a TU ruta protegida
         const res = await fetch(`${API_BASE}/upload`, {
             method: "POST",
-            headers: {
-                "Authorization": `Bearer ${token}`
-            },
+            credentials: "include", 
             body: formData
         });
 
@@ -246,7 +238,6 @@ async function subirACloudinary(file) {
         return null;
     }
 }
-
 
 async function publicarNoticia() {
     const titulo = document.getElementById("input-titulo").value.trim();
@@ -293,15 +284,12 @@ async function publicarNoticia() {
             categoria: categoria
         };
 
-        const token = localStorage.getItem("entrelineas_token");
-        if (!token) throw new Error("No tienes sesión iniciada.");
-
         const respuestaBD = await fetch(`${API_BASE}/noticias`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}` 
+                "Content-Type": "application/json"
             },
+            credentials: "include", 
             body: JSON.stringify(paqueteNoticia)
         });
 
