@@ -25,8 +25,19 @@ app.use(helmet({
     }
   }
 }));
+const origenesPermitidos = [
+    "https://entrelineas.onrender.com", 
+    "https://entre-lineas-f6ek.onrender.com"
+];
+
 app.use(cors({
-    origin: "https://entre-lineas-f6ek.onrender.com", 
+    origin: function (origin, callback) {
+        if (!origin || origenesPermitidos.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('CORS no permitido 💅'));
+        }
+    },
     credentials: true
 }));
 app.use((req, res, next) => {
