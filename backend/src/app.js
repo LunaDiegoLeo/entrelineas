@@ -17,8 +17,8 @@ app.use(helmet({
     useDefaults: true,
     directives: {
       "default-src": ["'self'"],
-      "script-src": ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com"],
-      "style-src": ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
+      "script-src": ["'self'", "https://www.googletagmanager.com"], 
+      "style-src": ["'self'", "https://cdnjs.cloudflare.com"], 
       "font-src": ["'self'", "https://cdnjs.cloudflare.com", "data:"],
       "img-src": ["'self'", "data:", "https:"],
       "connect-src": ["'self'", "https://www.google-analytics.com", "https://region1.google-analytics.com"]
