@@ -29,6 +29,10 @@ app.use(cors({
     origin: "https://entre-lineas-f6ek.onrender.com", 
     credentials: true
 }));
+app.use((req, res, next) => {
+    res.setHeader("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
+    next();
+});
 
 app.use(express.json());
 app.use(cookieParser()); 
