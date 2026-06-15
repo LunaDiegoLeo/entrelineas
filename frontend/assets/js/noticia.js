@@ -53,7 +53,7 @@ function renderNoticia(noticia) {
     ];
 
     document.getElementById("fecha").textContent =
-        `${meses[fecha.getMonth()]}-${fecha.getFullYear()}`;
+        `${meses[fecha.getMonth()]} - ${fecha.getFullYear()}`;
 
     document.getElementById("contenido").innerHTML = `
 
