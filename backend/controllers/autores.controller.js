@@ -7,7 +7,7 @@ export const getAutores = async (req, res) => {
         const result = await pool.query(`
             SELECT *
             FROM autores
-            WHERE id_autor != 1
+            WHERE id_autor >= 3
         `);
 
         res.json(result.rows);
