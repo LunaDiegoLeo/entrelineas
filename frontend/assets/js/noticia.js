@@ -50,12 +50,6 @@ function renderNoticia(noticia) {
 
     document.getElementById("contenido").innerHTML = `
 
-        <img
-            class="cover-image"
-            src="${noticia.portada}"
-            alt="${noticia.titulo}"
-        >
-
         ${noticia.contenido}
 
     `;
