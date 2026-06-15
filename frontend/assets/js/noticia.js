@@ -1,7 +1,7 @@
 const params = new URLSearchParams(window.location.search);
 const slug = params.get("slug");
 const API_BASE = "https://entrelineas.onrender.com/api";
-if (slug===null) {
+if (slug === null) {
     window.location.replace("index.html");
 }
 
@@ -39,21 +39,34 @@ function renderNoticia(noticia) {
     document.getElementById("resumen").textContent =
         noticia.resumen;
 
-    document.getElementById("autor-foto").src ='assets/images/autores/' +
+    document.getElementById("autor-foto").src = 'assets/images/autores/' +
         noticia.foto;
 
     document.getElementById("autor-nombre").textContent =
         noticia.nombre_autor;
 
+    const fecha = new Date(noticia.fecha_publicacion);
+
+    const meses = [
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ];
+
     document.getElementById("fecha").textContent =
-        noticia.fecha_publicacion;
+        `${meses[fecha.getMonth()]}-${fecha.getFullYear()}`;
 
     document.getElementById("contenido").innerHTML = `
+
+        <img
+            class="cover-image"
+            src="${noticia.portada}"
+            alt="${noticia.titulo}"
+        >
 
         ${noticia.contenido}
 
     `;
-     console.log(noticia.portada);
+    console.log(noticia.portada);
 
 }
 
@@ -111,34 +124,34 @@ cargarNoticia();
 cargarTrending();
 
 const html = document.documentElement;
-const btnTheme = document.getElementById('btn-theme'); 
+const btnTheme = document.getElementById('btn-theme');
 
 const sensorModoOscuro = window.matchMedia('(prefers-color-scheme: dark)');
 
 function aplicarTemaAutomatico(esOscuro) {
-  if (esOscuro) {
-    html.classList.add('dark-mode-auto');
-    if (btnTheme) btnTheme.innerHTML = '<i class="fa-solid fa-sun"></i>'; 
-  } else {
-    html.classList.remove('dark-mode-auto');
-    if (btnTheme) btnTheme.innerHTML = '<i class="fa-solid fa-moon"></i>'; 
-  }
+    if (esOscuro) {
+        html.classList.add('dark-mode-auto');
+        if (btnTheme) btnTheme.innerHTML = '<i class="fa-solid fa-sun"></i>';
+    } else {
+        html.classList.remove('dark-mode-auto');
+        if (btnTheme) btnTheme.innerHTML = '<i class="fa-solid fa-moon"></i>';
+    }
 }
 
 aplicarTemaAutomatico(sensorModoOscuro.matches);
 
 sensorModoOscuro.addEventListener('change', (evento) => {
-  aplicarTemaAutomatico(evento.matches);
+    aplicarTemaAutomatico(evento.matches);
 });
 
 if (btnTheme) {
-  btnTheme.addEventListener('click', () => {
-    html.classList.toggle('dark-mode-auto');
-    
-    if (html.classList.contains('dark-mode-auto')) {
-      btnTheme.innerHTML = '<i class="fa-solid fa-sun"></i>';
-    } else {
-      btnTheme.innerHTML = '<i class="fa-solid fa-moon"></i>';
-    }
-  });
+    btnTheme.addEventListener('click', () => {
+        html.classList.toggle('dark-mode-auto');
+
+        if (html.classList.contains('dark-mode-auto')) {
+            btnTheme.innerHTML = '<i class="fa-solid fa-sun"></i>';
+        } else {
+            btnTheme.innerHTML = '<i class="fa-solid fa-moon"></i>';
+        }
+    });
 }
