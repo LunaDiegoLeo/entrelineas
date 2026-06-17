@@ -169,10 +169,9 @@ function generarHTMLdelContenido(modo = 'preview') {
 
         if (!valorBruto && tipo !== 'img') return;
 
-        // 🛡️ MAGIA POTAXIE: Lavamos el código antes de usarlo
-        // Solo permitimos negritas, cursivas, subrayados y enlaces. Todo lo demás (scripts) SE ELIMINA.
+        
         let valorLimpio = DOMPurify.sanitize(valorBruto, { 
-            ALLOWED_TAGS: ['b', 'i', 'u', 'strong', 'em', 'a'], 
+            ALLOWED_TAGS: ['b', 'i', 'u', 'strong', 'em', 'a','ul','ol','li'], 
             ALLOWED_ATTR: ['href', 'target'] 
         });
 
