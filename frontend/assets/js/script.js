@@ -127,7 +127,7 @@ async function cargarAutores() {
     try {
 
         const response = await fetch(
-            `${API_BASE}/autores`
+            `${API_BASE}/autores/index`
         );
 
         if (!response.ok) {

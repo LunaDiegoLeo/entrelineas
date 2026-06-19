@@ -5,9 +5,31 @@ export const getAutores = async (req, res) => {
     try {
 
         const result = await pool.query(`
-            SELECT *
+            SELECT id_autor, nombre_autor
             FROM autores
-            WHERE id_autor >= 3
+            WHERE id_autor > 2
+        `);
+
+        res.json(result.rows);
+
+    } catch (error) {
+
+        res.status(500).json({
+            error: error.message
+        });
+
+    }
+
+};
+
+export const getAutoresIndex = async (req, res) => {
+
+    try {
+
+        const result = await pool.query(`
+            SELECT nombre_autor, bio, foto
+            FROM autores
+            WHERE id_autor > 2
         `);
 
         res.json(result.rows);
