@@ -5,6 +5,7 @@ import {
     getNoticias,
     getNoticiaPorSlug,
     buscarPorTitulo,
+    getTrending,
     getNoticiasPorFecha,
     crearNoticia
 } from "../controllers/noticias.controller.js";
