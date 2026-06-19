@@ -5,12 +5,8 @@ export const getNoticias = async (req, res) => {
     try {
 
         const result = await pool.query(`
-            SELECT *
-            FROM noticias n
-            JOIN autores a
-                ON n.autor_id = a.id_autor
-            JOIN categorias c
-                ON n.categoria_id = c.id_categoria
+            SELECT titulo, slug, resumen, portada
+            FROM noticias
             ORDER BY fecha_publicacion DESC
             LIMIT 6
         `);
