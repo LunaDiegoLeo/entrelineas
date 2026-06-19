@@ -56,7 +56,7 @@ export const getNoticiaPorSlug = async (req, res) => {
         const { slug } = req.params;
 
         const result = await pool.query(`
-            SELECT titulo, slug, resumen, contenido, portada, fecha_publicacion, a.nombre_autor AS autor, c.nombre AS categoria
+            SELECT titulo, slug, resumen, contenido, portada, fecha_publicacion, nombre_autor, foto, nombre
             FROM noticias n
             JOIN autores a
                 ON n.autor_id = a.id_autor
