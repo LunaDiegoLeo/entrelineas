@@ -75,7 +75,7 @@ async function cargarTrending() {
     try {
 
         const response = await fetch(
-            `${API_BASE}/noticias`
+            `${API_BASE}/noticias/trending`
         );
 
         const noticias = await response.json();

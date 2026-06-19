@@ -31,6 +31,7 @@ const verificarToken = (req, res, next) => {
 router.get("/", getNoticias);
 router.get("/buscar", buscarPorTitulo);
 router.get("/fechas", getNoticiasPorFecha);
+router.get("/trending", getTrending);
 
 router.post("/", verificarToken, crearNoticia);
 
