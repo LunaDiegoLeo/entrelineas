@@ -249,7 +249,7 @@ async function obtenerNoticiasPorAutor(idAutor, nombreAutor) {
             modalContenido.innerHTML += `
                 <div class="noticia-mini-card" style="display: flex; flex-direction: column; gap: 12px; padding: 15px;">
                     
-                    <img src="${portadaUrl}" alt="Portada" style="width: 100%; height: 200px; object-fit: cover; border-radius: 6px; box-shadow: 2px 2px 0px rgba(0,0,0,0.1);">
+                    <img src="${noticia.portada}" alt="Portada" style="width: 100%; height: 200px; object-fit: cover; border-radius: 6px; box-shadow: 2px 2px 0px rgba(0,0,0,0.1);">
                     
                     <h4 style="margin: 0; font-size: 1.25rem;">${noticia.titulo}</h4>
                     <p style="margin: 0; font-size: 0.95rem; line-height: 1.4;">${noticia.resumen || "Sin resumen disponible."}</p>
