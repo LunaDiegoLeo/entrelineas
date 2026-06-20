@@ -535,3 +535,65 @@ html.dark-mode-auto .card-image,
 html.dark-mode-auto #footer {   /* <-- Reemplaza con la clase de tus imágenes de portada */
   filter: invert(1) hue-rotate(180deg) !important; /* Volvemos a invertir para que se vean NORMALES */
 }
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px); /* Efecto cristal pro */
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    position: relative;
+    background: #fff;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    padding: 30px 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-scroll-area {
+    overflow-y: auto;
+    margin-top: 20px;
+    padding-right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espacio entre cada noticia */
+}
+
+.btn-cerrar-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #333;
+    transition: transform 0.2s;
+}
+.btn-cerrar-modal:hover {
+    transform: scale(1.2) rotate(90deg);
+    color: red;
+}
+
+.noticia-mini-card {
+    border: 1px solid #eee;
+    padding: 15px;
+    border-left: 5px solid #8e44ad; /* Color purple para combinar */
+    background: #fafafa;
+}
+.noticia-mini-card h4 {
+    margin: 0 0 10px 0;
+    font-size: 1.2rem;
+}

@@ -127,7 +127,7 @@ async function cargarAutores() {
     try {
 
         const response = await fetch(
-            `${API_BASE}/autores/index`
+            `${API_BASE}/autores`
         );
 
         if (!response.ok) {
@@ -207,12 +207,64 @@ function renderAutores(autores) {
                     ${autor.bio}
                 </p>
 
+                <button class="btn btn-purple"
+                    onclick="obtenerNoticiasPorAutor('${autor.id_autor}', '${autor.nombre_autor}')"
+                >
+                    Ver noticias
+                </button>
+
             </div>
 
         `;
     });
 
     aplicarRotaciones();
+}
+
+// 🔮 Función para consultar la API y abrir la ventana
+async function obtenerNoticiasPorAutor(idAutor, nombreAutor) {
+    const modal = document.getElementById("modal-autor");
+    const modalTitulo = document.getElementById("modal-autor-titulo");
+    const modalContenido = document.getElementById("modal-autor-contenido");
+
+    modalTitulo.textContent = `Noticias de ${nombreAutor}`;
+    modalContenido.innerHTML = `<p style="text-align:center;">Buscando en los archivos... 🕵️‍♀️</p>`;
+    modal.style.display = "flex"; // Mostramos el modal
+
+    try {
+        const response = await fetch(`${API_BASE}/autores/${idAutor}/noticias`);
+        
+        if (!response.ok) {
+            throw new Error("No pudimos cargar las noticias de esta beba.");
+        }
+
+        const noticias = await response.json();
+
+        if (!noticias || noticias.length === 0) {
+            modalContenido.innerHTML = `<p style="text-align:center;">Este autor aún no tiene columnas publicadas. 📭</p>`;
+            return;
+        }
+
+        modalContenido.innerHTML = "";
+        noticias.forEach(noticia => {
+            modalContenido.innerHTML += `
+                <div class="noticia-mini-card">
+                    <h4>${noticia.titulo}</h4>
+                    <p>${noticia.resumen || "Sin resumen disponible."}</p>
+                    <a href="noticia.html?id=${noticia.id_noticia}" class="btn btn-purple" style="display:inline-block; margin-top:10px;">
+                        Leer completa
+                    </a>
+                </div>
+            `;
+        });
+
+    } catch (error) {
+        modalContenido.innerHTML = `<p style="text-align:center; color:red;">Error: ${error.message}</p>`;
+    }
+}
+
+function cerrarModalAutor() {
+    document.getElementById("modal-autor").style.display = "none";
 }
 
 /* =========================
@@ -291,34 +343,34 @@ document.addEventListener(
 );
 
 const html = document.documentElement;
-const btnTheme = document.getElementById('btn-theme'); 
+const btnTheme = document.getElementById('btn-theme');
 
 const sensorModoOscuro = window.matchMedia('(prefers-color-scheme: dark)');
 
 function aplicarTemaAutomatico(esOscuro) {
-  if (esOscuro) {
-    html.classList.add('dark-mode-auto');
-    if (btnTheme) btnTheme.innerHTML = '<i class="fa-solid fa-sun"></i>'; 
-  } else {
-    html.classList.remove('dark-mode-auto');
-    if (btnTheme) btnTheme.innerHTML = '<i class="fa-solid fa-moon"></i>'; 
-  }
+    if (esOscuro) {
+        html.classList.add('dark-mode-auto');
+        if (btnTheme) btnTheme.innerHTML = '<i class="fa-solid fa-sun"></i>';
+    } else {
+        html.classList.remove('dark-mode-auto');
+        if (btnTheme) btnTheme.innerHTML = '<i class="fa-solid fa-moon"></i>';
+    }
 }
 
 aplicarTemaAutomatico(sensorModoOscuro.matches);
 
 sensorModoOscuro.addEventListener('change', (evento) => {
-  aplicarTemaAutomatico(evento.matches);
+    aplicarTemaAutomatico(evento.matches);
 });
 
 if (btnTheme) {
-  btnTheme.addEventListener('click', () => {
-    html.classList.toggle('dark-mode-auto');
-    
-    if (html.classList.contains('dark-mode-auto')) {
-      btnTheme.innerHTML = '<i class="fa-solid fa-sun"></i>';
-    } else {
-      btnTheme.innerHTML = '<i class="fa-solid fa-moon"></i>';
-    }
-  });
+    btnTheme.addEventListener('click', () => {
+        html.classList.toggle('dark-mode-auto');
+
+        if (html.classList.contains('dark-mode-auto')) {
+            btnTheme.innerHTML = '<i class="fa-solid fa-sun"></i>';
+        } else {
+            btnTheme.innerHTML = '<i class="fa-solid fa-moon"></i>';
+        }
+    });
 }
