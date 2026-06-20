@@ -232,7 +232,7 @@ async function obtenerNoticiasPorAutor(idAutor, nombreAutor) {
 
     try {
         const response = await fetch(`${API_BASE}/autores/${idAutor}/noticias`);
-        
+
         if (!response.ok) {
             throw new Error("No pudimos cargar las noticias de esta beba.");
         }
@@ -247,14 +247,20 @@ async function obtenerNoticiasPorAutor(idAutor, nombreAutor) {
         modalContenido.innerHTML = "";
         noticias.forEach(noticia => {
             modalContenido.innerHTML += `
-                <div class="noticia-mini-card">
-                    <h4>${noticia.titulo}</h4>
-                    <p>${noticia.resumen || "Sin resumen disponible."}</p>
-                    <a href="noticia.html?slug=${noticia.slug}" class="btn btn-purple" style="display:inline-block; margin-top:10px;">
-                        Leer completa
-                    </a>
-                </div>
-            `;
+        <div class="noticia-mini-card" style="display: flex; gap: 15px; align-items: flex-start;">
+            
+            <img src="${noticia.portada}" alt="Portada" style="width: 90px; height: 90px; object-fit: cover; border-radius: 6px; flex-shrink: 0; box-shadow: 2px 2px 0px rgba(0,0,0,0.1);">
+            
+            <div style="flex-grow: 1;">
+                <h4 style="margin-top: 0; font-size: 1.1rem;">${noticia.titulo}</h4>
+                <p style="font-size: 0.9rem; margin: 5px 0;">${noticia.resumen || "Sin resumen disponible."}</p>
+                <a href="noticia.html?slug=${noticia.slug}" class="btn btn-purple" style="display:inline-block; margin-top:8px; font-size: 0.85rem; padding: 5px 10px;">
+                    Leer completa
+                </a>
+            </div>
+            
+        </div>
+                `;
         });
 
     } catch (error) {
