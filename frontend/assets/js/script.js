@@ -206,7 +206,7 @@ function renderAutores(autores) {
                 <p class="bio">
                     ${autor.bio}
                 </p>
-
+                <br>
                 <button class="btn btn-purple"
                     onclick="obtenerNoticiasPorAutor('${autor.id_autor}', '${autor.nombre_autor}')"
                 >

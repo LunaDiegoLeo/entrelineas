@@ -594,7 +594,10 @@ html.dark-mode-auto video,
 html.dark-mode-auto iframe,
 html.dark-mode-auto .polaroid-img,    
 html.dark-mode-auto .card-image,
-html.dark-mode-auto #footer,
-html.dark-mode-auto .modal-overlay {   
+html.dark-mode-auto #footer {   
   filter: invert(1) hue-rotate(180deg) !important;
+}
+
+html.dark-mode-auto .modal-overlay {
+    background-color: rgba(0, 0, 0, 0.6) !important; 
 }
