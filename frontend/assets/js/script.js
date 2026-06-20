@@ -221,7 +221,6 @@ function renderAutores(autores) {
     aplicarRotaciones();
 }
 
-// 🔮 Función para consultar la API y abrir la ventana
 async function obtenerNoticiasPorAutor(idAutor, nombreAutor) {
     const modal = document.getElementById("modal-autor");
     const modalTitulo = document.getElementById("modal-autor-titulo");
@@ -251,7 +250,7 @@ async function obtenerNoticiasPorAutor(idAutor, nombreAutor) {
                 <div class="noticia-mini-card">
                     <h4>${noticia.titulo}</h4>
                     <p>${noticia.resumen || "Sin resumen disponible."}</p>
-                    <a href="noticia.html?id=${noticia.id_noticia}" class="btn btn-purple" style="display:inline-block; margin-top:10px;">
+                    <a href="noticia.html?slug=${noticia.slug}" class="btn btn-purple" style="display:inline-block; margin-top:10px;">
                         Leer completa
                     </a>
                 </div>

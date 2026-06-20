@@ -520,21 +520,7 @@ img {
     .cat4 { top: -25px; right: 5%; } /* El único sobreviviente del footer */
 }
 
-/* 1. 🌙 La magia automática principal (Sigue igual) */
-html.dark-mode-auto {
-  filter: invert(1) hue-rotate(180deg);
-}
 
-/* 2. 🚫 La lista de EXCLUSIONES VIP (Aquí está el truco pro) */
-/* Agregamos las clases específicas de tus autores y portadas */
-html.dark-mode-auto img,
-html.dark-mode-auto video,
-html.dark-mode-auto iframe,
-html.dark-mode-auto .polaroid-img,    /* <-- Reemplaza con la clase de tus fotos de autor */
-html.dark-mode-auto .card-image,
-html.dark-mode-auto #footer {   /* <-- Reemplaza con la clase de tus imágenes de portada */
-  filter: invert(1) hue-rotate(180deg) !important; /* Volvemos a invertir para que se vean NORMALES */
-}
 
 .modal-overlay {
     position: fixed;
@@ -543,7 +529,7 @@ html.dark-mode-auto #footer {   /* <-- Reemplaza con la clase de tus imágenes d
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(5px); /* Efecto cristal pro */
+    backdrop-filter: blur(5px);
     z-index: 9999;
     display: flex;
     justify-content: center;
@@ -568,7 +554,7 @@ html.dark-mode-auto #footer {   /* <-- Reemplaza con la clase de tus imágenes d
     padding-right: 10px;
     display: flex;
     flex-direction: column;
-    gap: 15px; /* Espacio entre cada noticia */
+    gap: 15px;
 }
 
 .btn-cerrar-modal {
@@ -590,10 +576,25 @@ html.dark-mode-auto #footer {   /* <-- Reemplaza con la clase de tus imágenes d
 .noticia-mini-card {
     border: 1px solid #eee;
     padding: 15px;
-    border-left: 5px solid #8e44ad; /* Color purple para combinar */
+    border-left: 5px solid #8e44ad;
     background: #fafafa;
 }
 .noticia-mini-card h4 {
     margin: 0 0 10px 0;
     font-size: 1.2rem;
+}
+
+html.dark-mode-auto {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+
+html.dark-mode-auto img,
+html.dark-mode-auto video,
+html.dark-mode-auto iframe,
+html.dark-mode-auto .polaroid-img,    
+html.dark-mode-auto .card-image,
+html.dark-mode-auto #footer,
+html.dark-mode-auto .modal-overlay {   
+  filter: invert(1) hue-rotate(180deg) !important;
 }
