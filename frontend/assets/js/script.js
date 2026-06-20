@@ -210,7 +210,7 @@ function renderAutores(autores) {
                 <button class="btn btn-purple"
                     onclick="obtenerNoticiasPorAutor('${autor.id_autor}', '${autor.nombre_autor}')"
                 >
-                    Ver noticias
+                    Ver columnas
                 </button>
 
             </div>
@@ -226,7 +226,7 @@ async function obtenerNoticiasPorAutor(idAutor, nombreAutor) {
     const modalTitulo = document.getElementById("modal-autor-titulo");
     const modalContenido = document.getElementById("modal-autor-contenido");
 
-    modalTitulo.textContent = `Noticias de ${nombreAutor}`;
+    modalTitulo.textContent = `Columnas de ${nombreAutor}`;
     modalContenido.innerHTML = `<p style="text-align:center;">Buscando en los archivos... 🕵️‍♀️</p>`;
     modal.style.display = "flex";
 
