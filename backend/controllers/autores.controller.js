@@ -27,7 +27,7 @@ export const getAutoresIndex = async (req, res) => {
     try {
 
         const result = await pool.query(`
-            SELECT nombre_autor, bio, foto
+            SELECT id_autor, nombre_autor, bio, foto
             FROM autores
             WHERE id_autor > 2
         `);

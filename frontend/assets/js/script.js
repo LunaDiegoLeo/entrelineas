@@ -127,7 +127,7 @@ async function cargarAutores() {
     try {
 
         const response = await fetch(
-            `${API_BASE}/autores`
+            `${API_BASE}/autores/index`
         );
 
         if (!response.ok) {
@@ -229,7 +229,7 @@ async function obtenerNoticiasPorAutor(idAutor, nombreAutor) {
 
     modalTitulo.textContent = `Noticias de ${nombreAutor}`;
     modalContenido.innerHTML = `<p style="text-align:center;">Buscando en los archivos... 🕵️‍♀️</p>`;
-    modal.style.display = "flex"; // Mostramos el modal
+    modal.style.display = "flex";
 
     try {
         const response = await fetch(`${API_BASE}/autores/${idAutor}/noticias`);
