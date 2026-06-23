@@ -1148,6 +1148,7 @@ html.dark-mode-auto #footer {
     .noticia-mini-card img { 
         height: 180px !important; 
     }
+    
     .article-subtitle {
         font-size: 1.1rem !important;
         line-height: 1.6 !important;
@@ -1172,10 +1173,22 @@ html.dark-mode-auto #footer {
     .noticia-mini-card img { 
         height: 160px !important; 
     }
+    
     .article-subtitle {
         font-size: 1rem !important;
         line-height: 1.5 !important;
         margin-bottom: 1.2rem !important;
+    }
+
+    .article-content p {
+        font-size: 1rem !important;
+        line-height: 1.7 !important;
+        margin: 1rem 0 !important;
+    }
+
+    .article-content h2 {
+        font-size: 1.6rem !important;
+        margin-top: 1.8rem !important;
     }
 }
 
@@ -1201,9 +1214,21 @@ html.dark-mode-auto #footer {
         padding: 8px 12px !important; 
         font-size: 0.9rem !important; 
     }
+    
     .article-subtitle {
         font-size: 0.9rem !important; 
         line-height: 1.4 !important;  
         margin-bottom: 1rem !important;
+    }
+
+    .article-content p {
+        font-size: 0.92rem !important;
+        line-height: 1.5 !important;
+        margin: 0.8rem 0 !important;
+    }
+
+    .article-content h2 {
+        font-size: 1.35rem !important;
+        margin-top: 1.4rem !important;
     }
 }
