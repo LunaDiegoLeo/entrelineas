@@ -1148,6 +1148,11 @@ html.dark-mode-auto #footer {
     .noticia-mini-card img { 
         height: 180px !important; 
     }
+    .article-subtitle {
+        font-size: 1.1rem !important;
+        line-height: 1.6 !important;
+        margin-bottom: 1.5rem !important;
+    }
 }
 
 @media screen and (max-width: 600px) {
@@ -1166,6 +1171,11 @@ html.dark-mode-auto #footer {
     
     .noticia-mini-card img { 
         height: 160px !important; 
+    }
+    .article-subtitle {
+        font-size: 1rem !important;
+        line-height: 1.5 !important;
+        margin-bottom: 1.2rem !important;
     }
 }
 
@@ -1190,5 +1200,10 @@ html.dark-mode-auto #footer {
     .btn { 
         padding: 8px 12px !important; 
         font-size: 0.9rem !important; 
+    }
+    .article-subtitle {
+        font-size: 0.9rem !important; 
+        line-height: 1.4 !important;  
+        margin-bottom: 1rem !important;
     }
 }
