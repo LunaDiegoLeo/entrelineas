@@ -601,3 +601,59 @@ html.dark-mode-auto #footer {
 html.dark-mode-auto .modal-overlay {
     background-color: rgba(255, 255, 255, 0.6) !important; 
 }
+
+@media screen and (max-width: 768px) {
+    html { font-size: 15px !important; }
+    
+    .modal-content { 
+        width: 95%; 
+        padding: 25px 15px; 
+    }
+    
+    .noticia-mini-card img { 
+        height: 180px !important; 
+    }
+}
+
+@media screen and (max-width: 600px) {
+    html { font-size: 14px !important; }
+    
+    h1 { font-size: 1.8rem !important; }
+    h2 { font-size: 1.5rem !important; }
+    h3 { font-size: 1.3rem !important; }
+    
+    .modal-content { padding: 20px 10px; }
+    
+    .noticia-mini-card { 
+        padding: 12px; 
+        gap: 10px; 
+    }
+    
+    .noticia-mini-card img { 
+        height: 160px !important; 
+    }
+}
+
+@media screen and (max-width: 400px) {
+    html { font-size: 13px !important; }
+    
+    h1 { font-size: 1.6rem !important; }
+    h2 { font-size: 1.3rem !important; }
+    
+    .cutout-box, .polaroid { 
+        padding: 10px !important; 
+    }
+    
+    .noticia-mini-card { 
+        padding: 10px; 
+    }
+    
+    .noticia-mini-card img { 
+        height: 140px !important; 
+    }
+    
+    .btn { 
+        padding: 8px 12px !important; 
+        font-size: 0.9rem !important; 
+    }
+}
