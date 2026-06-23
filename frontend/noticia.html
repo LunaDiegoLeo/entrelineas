@@ -33,8 +33,9 @@ family=Courier+Prime:wght@400;700&family=Permanent+Marker&family=Space+Grotesk:w
     }
 
     #autor-foto {
-        width: 90px;
-        height: 90px;
+        width: clamp(90px, 10vw, 140px);
+        height: clamp(90px, 10vw, 140px);
+
         object-fit: cover;
         border-radius: 50%;
         flex-shrink: 0;
@@ -78,8 +79,6 @@ family=Courier+Prime:wght@400;700&family=Permanent+Marker&family=Space+Grotesk:w
         <span id="categoria" class="category-tag"></span>
         <h1 id="titulo" class="article-title marker-text">
         </h1>
-        <p id="resumen" class="article-subtitle">
-        </p>
         <div class="article-meta">
             <div class="author-info">
                 <img id="autor-foto" src="" alt="Autor">
@@ -89,6 +88,8 @@ family=Courier+Prime:wght@400;700&family=Permanent+Marker&family=Space+Grotesk:w
                 </div>
             </div>
         </div>
+        <p id="resumen" class="article-subtitle">
+        </p>
     </header>
     <main class="article-layout">
         <aside class="sidebar">
