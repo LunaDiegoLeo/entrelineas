@@ -106,6 +106,7 @@ function renderNoticias(noticias) {
                 <a 
                     href="noticia.html?slug=${noticia.slug}"
                     class="btn ${button}"
+                    aria-label="Leer más sobre ${noticia.titulo}"
                 >
                     Leer más
                 </a>
@@ -209,6 +210,7 @@ function renderAutores(autores) {
                 <br>
                 <button class="btn btn-purple"
                     onclick="obtenerNoticiasPorAutor('${autor.id_autor}', '${autor.nombre_autor}')"
+                    aria-label="Ver columnas de ${autor.nombre_autor}"
                 >
                     Ver columnas
                 </button>
@@ -254,7 +256,7 @@ async function obtenerNoticiasPorAutor(idAutor, nombreAutor) {
                     <h4 style="margin: 0; font-size: 1.25rem;">${noticia.titulo}</h4>
                     <p style="margin: 0; font-size: 0.95rem; line-height: 1.4;">${noticia.resumen || "Sin resumen disponible."}</p>
                     
-                    <a href="noticia.html?slug=${noticia.slug}" class="btn btn-purple" style="align-self: flex-start; margin-top: 5px;">
+                    <a href="noticia.html?slug=${noticia.slug}" class="btn btn-purple" style="align-self: flex-start; margin-top: 5px;" aria-label="Leer más sobre ${noticia.titulo}">
                         Leer completa
                     </a>
                     

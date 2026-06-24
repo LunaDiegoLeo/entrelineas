@@ -393,12 +393,14 @@ img {
     .nav-links { justify-content: center; gap: 0.7rem; }
     .nav-links a { font-size: 0.9rem; padding: 0.45rem 0.7rem; }
 }
-
-@media (max-width: 400px) {
+@media (max-width: 600px) {
     body {
         background-image: radial-gradient(var(--black) 1px, transparent 1px), url("../images/fondo-body2.png");
         background-size: 15px 15px, cover;
     }
+}
+
+@media (max-width: 400px) {
     .logo-sticker { max-width: 380px; margin: auto; }
     .hero h1 { font-size: 1.8rem; }
     .bg-word { font-size: 3.5rem; top: 950px; }
