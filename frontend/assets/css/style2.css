@@ -25,7 +25,7 @@ body {
     background-color: #f4f1ea;
     background-image:
         radial-gradient(var(--black) 1px, transparent 1px),
-        url("../images/fondo-body.png");
+        url("../images/fondo-body.webp");
     background-size: 20px 20px, cover;
     background-position: center, center;
     background-repeat: repeat, no-repeat;
@@ -395,7 +395,7 @@ img {
 }
 @media (max-width: 600px) {
     body {
-        background-image: radial-gradient(var(--black) 1px, transparent 1px), url("../images/fondo-body2.png");
+        background-image: radial-gradient(var(--black) 1px, transparent 1px), url("../images/fondo-body2.webp");
         background-size: 15px 15px, cover;
     }
 }
