@@ -229,7 +229,7 @@ async function obtenerNoticiasPorAutor(idAutor, nombreAutor) {
     const modalContenido = document.getElementById("modal-autor-contenido");
 
     modalTitulo.textContent = `Columnas de ${nombreAutor}`;
-    modalContenido.innerHTML = `<p style="text-align:center;">Buscando en los archivos... 🕵️‍♀️</p>`;
+    modalContenido.innerHTML = `<p style="text-align:center;">Buscando en los archivos... </p>`;
     modal.style.display = "flex";
 
     try {
