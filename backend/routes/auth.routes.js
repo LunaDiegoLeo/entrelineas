@@ -32,9 +32,7 @@ router.post("/login", async (req, res) => {
     }
 });
 
-// NUEVO: Verificar leyendo los Headers
 router.get("/verify", (req, res) => {
-    // El frontend enviará el token en el formato "Bearer <token>"
     const authHeader = req.headers.authorization;
     
     if (!authHeader || !authHeader.startsWith("Bearer ")) {

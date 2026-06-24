@@ -16,9 +16,9 @@ const upload = multer({ storage });
 
 const verificarToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) return res.status(401).json({ error: "No tienes permiso 💅" });
+    if (!authHeader || !authHeader.startsWith("Bearer ")) return res.status(401).json({ error: "No tienes permiso" });
     try {
-        const decoded = jwt.verify(authHeader.split(" ")[1], process.env.JWT_SECRET || "super_secreto_desarrollo_123");
+        const decoded = jwt.verify(authHeader.split(" ")[1], process.env.JWT_SECRET);
         req.user = decoded; 
         next();
     } catch (error) {
