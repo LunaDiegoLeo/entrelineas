@@ -11,6 +11,8 @@ const registroLimiter = rateLimit({
     message: { error: "Beba, te pasaste de intentos. Espera 15 minutitos, porfa." }
 });
 
+console.log("GMAIL_USER:", process.env.GMAIL_USER);
+console.log("GMAIL_PASS existe:", !!process.env.GMAIL_PASS);
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com", // Le decimos exactamente a dónde ir
@@ -20,11 +22,9 @@ const transporter = nodemailer.createTransport({
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_PASS
     },
-    tls: {
-        rejectUnauthorized: false
-    },
-    localAddress: "0.0.0.0",
-    family: 4
+    connectionTimeout: 30000,
+    greetingTimeout: 30000,
+    socketTimeout: 30000,
 });
 
 const verificarLector = (req, res, next) => {
@@ -72,9 +72,11 @@ router.post("/registro", registroLimiter, async (req, res) => {
             "INSERT INTO usuarios_wp (email, alias, password, token_verificacion) VALUES ($1, $2, $3, $4)",
             [email, alias, passwordHash, tokenHash]
         );
+        await transporter.verify();
+        console.log("SMTP conectado");
 
         await transporter.sendMail({
-            from: '"Entre Líneas" <tu_correo@gmail.com>',
+            from: process.env.GMAIL_USER,
             to: email,
             subject: "Verifica tu cuenta en Entre Líneas",
             html: `
