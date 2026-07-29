@@ -22,7 +22,7 @@ export async function enviarCorreoVerificacion({
                         
                         <div style="text-align: center; margin: 35px 0;">
                             <span style="display: inline-block; background-color: #111111; color: #ffffff; font-size: 28px; font-weight: bold; letter-spacing: 6px; padding: 15px 30px; border-radius: 4px;">
-                                ${codigoPlano}
+                                ${codigo}
                             </span>
                         </div>
                         
