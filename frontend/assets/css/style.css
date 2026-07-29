@@ -1145,6 +1145,10 @@ html.dark-mode-auto #footer {
     filter: invert(1) hue-rotate(180deg);
 }
 
+html.dark-mode-auto .modal-overlay {
+    background-color: rgba(255, 255, 255, 0.6) !important; 
+}
+
 @media screen and (max-width: 768px) {
     html {
         font-size: 15px !important;
