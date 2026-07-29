@@ -79,11 +79,12 @@ formComentario.addEventListener('submit', async (e) => {
         if (respuesta.ok) {
             textoComentario.value = ''; 
             cargarComentarios(); 
+            mostrarNotificacion("¡Comentario publicado con éxito!", "exito");
         } else {
-            alert(data.error);
+            mostrarNotificacion(data.error, 'error');
         }
     } catch (error) {
-        alert("Ocurrió un error al intentar publicar el comentario.");
+        mostrarNotificacion("Ocurrió un error al intentar publicar el comentario.", 'error');
     }
 });
 
