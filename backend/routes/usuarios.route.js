@@ -1,20 +1,19 @@
 import express from "express";
 const router = express.Router();
 import bcrypt from "bcrypt";
-import { Resend } from "resend";
 import rateLimit from "express-rate-limit";
 import { pool } from "../config/db.js";
 import jwt from "jsonwebtoken";
+
+import { enviarCorreoVerificacion } from "../services/email.service.js";
+
 const registroLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
     max: 3,
     message: { error: "Beba, te pasaste de intentos. Espera 15 minutitos, porfa." }
 });
 
-import dns from 'dns';
-dns.setDefaultResultOrder('ipv4first');
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 const verificarLector = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -36,6 +35,7 @@ const verificarLector = (req, res, next) => {
 
 
 router.post("/registro", registroLimiter, async (req, res) => {
+    await pruebaBrevo();
     try {
         const { email, alias, password } = req.body;
 
@@ -63,40 +63,11 @@ router.post("/registro", registroLimiter, async (req, res) => {
             [email, alias, passwordHash, tokenHash]
         );
 
-        console.log("API:", process.env.RESEND_API_KEY?.slice(0, 8));
         
-        const { data, error } = await resend.emails.send({
-            from: `"Entre Líneas" <${process.env.SENDER_EMAIL}>`,
+        await enviarCorreoVerificacion({
             to: email,
-            subject: "Verifica tu cuenta en Entre Líneas",
-            html: `
-                <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f9f9f9; padding: 40px 20px; margin: 0;">
-                    <div style="max-width: 500px; background-color: #ffffff; margin: 0 auto; padding: 40px; border-radius: 8px; border: 1px solid #eeeeee; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
-                        
-                        <h1 style="text-align: center; color: #111111; font-size: 22px; letter-spacing: 2px; margin-top: 0; margin-bottom: 30px;">
-                            ENTRE LÍNEAS
-                        </h1>
-                        
-                        <p style="color: #333333; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
-                            Hola, <strong>${alias}</strong>:
-                        </p>
-                        
-                        <p style="color: #444444; font-size: 15px; line-height: 1.6; margin-bottom: 30px;">
-                            Gracias por unirte a nuestra comunidad. Para completar tu registro y habilitar tu cuenta, por favor ingresa el siguiente código de verificación:
-                        </p>
-                        
-                        <div style="text-align: center; margin: 35px 0;">
-                            <span style="display: inline-block; background-color: #111111; color: #ffffff; font-size: 28px; font-weight: bold; letter-spacing: 6px; padding: 15px 30px; border-radius: 4px;">
-                                ${codigoPlano}
-                            </span>
-                        </div>
-                        
-                        <p style="color: #888888; font-size: 13px; text-align: center; border-top: 1px solid #eeeeee; padding-top: 20px; margin-top: 40px; margin-bottom: 0;">
-                            Si no solicitaste crear una cuenta en Entre Líneas, puedes ignorar este mensaje de forma segura.
-                        </p>
-                    </div>
-                </div>
-            `
+            alias,
+            codigo: codigoPlano
         });
 
         res.status(200).json({ mensaje: "¡Revisa tu correo! Te enviamos un código." });
