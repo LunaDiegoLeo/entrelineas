@@ -36,7 +36,7 @@ function confirmarCierreSesion(onConfirm) {
     titulo.textContent = '¿Te vas tan pronto?';
     
     const texto = document.createElement('p');
-    texto.textContent = 'Estás a punto de cerrar sesión. ¿Segura que quieres salir del chismecito?';
+    texto.textContent = 'Estás a punto de cerrar sesión. ¿Segurx que quieres salir del chismecito?';
     
     // Contenedor de botones
     const btnContainer = document.createElement('div');
@@ -219,7 +219,7 @@ function actualizarMenuUsuario() {
         const btnIngresar = btnIngresarOriginal.cloneNode(true);
         btnIngresarOriginal.parentNode.replaceChild(btnIngresar, btnIngresarOriginal);
         
-        btnIngresar.textContent = `Hola, ${alias}`;
+        btnIngresar.textContent = `Hola, ${alias} / Cerrar sesión`;
         
         btnIngresar.removeAttribute('onclick'); 
         if (btnIngresar.tagName === 'A') {
