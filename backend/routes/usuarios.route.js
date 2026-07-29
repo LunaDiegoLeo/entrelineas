@@ -62,8 +62,10 @@ router.post("/registro", registroLimiter, async (req, res) => {
             "INSERT INTO usuarios_wp (email, alias, password, token_verificacion) VALUES ($1, $2, $3, $4)",
             [email, alias, passwordHash, tokenHash]
         );
+
+        console.log("API:", process.env.RESEND_API_KEY?.slice(0, 8));
         
-        await resend.emails.send({
+        const { data, error } = await resend.emails.send({
             from: `"Entre Líneas" <${process.env.SENDER_EMAIL}>`,
             to: email,
             subject: "Verifica tu cuenta en Entre Líneas",
@@ -98,6 +100,15 @@ router.post("/registro", registroLimiter, async (req, res) => {
         });
 
         res.status(200).json({ mensaje: "¡Revisa tu correo! Te enviamos un código." });
+        console.log("RESEND DATA:", data);
+        console.log("RESEND ERROR:", error);
+
+        if (error) {
+            return res.status(500).json({
+                error: "Error enviando correo",
+                detalle: error
+            });
+        }
 
     } catch (error) {
         console.error("Error en registro:", error);
