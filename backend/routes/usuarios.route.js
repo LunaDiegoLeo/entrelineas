@@ -14,8 +14,8 @@ const registroLimiter = rateLimit({
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com", // Le decimos exactamente a dónde ir
-    port: 587, // Usamos el puerto seguro de Google
-    secure: false,
+    port: 465, // Usamos el puerto seguro de Google
+    secure: true,
     auth: {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_PASS
