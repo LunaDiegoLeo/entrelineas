@@ -15,14 +15,13 @@ import dns from 'dns';
 dns.setDefaultResultOrder('ipv4first');
 
 const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com", // Le decimos exactamente a dónde ir
-    port: 465, // Usamos el puerto seguro de Google
-    secure: true,
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT),
+    secure: false,
     auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS
-    },
-    family: 4
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
+    }
 });
 
 const verificarLector = (req, res, next) => {
@@ -43,25 +42,6 @@ const verificarLector = (req, res, next) => {
     }
 };
 
-
-router.get("/smtp-test", async (req, res) => {
-    try {
-        const ips = await dns.lookup("smtp.gmail.com", { all: true });
-
-        console.log(ips);
-
-        await transporter.verify();
-
-        res.json({
-            ok: true,
-            ips
-        });
-
-    } catch (e) {
-        console.error(e);
-        res.status(500).json(e);
-    }
-});
 
 router.post("/registro", registroLimiter, async (req, res) => {
     try {
@@ -94,7 +74,7 @@ router.post("/registro", registroLimiter, async (req, res) => {
         console.log("SMTP conectado");
 
         await transporter.sendMail({
-            from: process.env.GMAIL_USER,
+            from: `"Entre Líneas" <${process.env.SENDER_EMAIL}>`,
             to: email,
             subject: "Verifica tu cuenta en Entre Líneas",
             html: `
