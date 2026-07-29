@@ -5,7 +5,7 @@ import rateLimit from "express-rate-limit";
 import { pool } from "../config/db.js";
 import jwt from "jsonwebtoken";
 
-import { pruebaBrevo } from "../services/email.service.js";
+import { enviarCorreoVerificacion } from "../services/email.service.js";
 
 const registroLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
@@ -35,7 +35,6 @@ const verificarLector = (req, res, next) => {
 
 
 router.post("/registro", registroLimiter, async (req, res) => {
-    await pruebaBrevo();
     try {
         const { email, alias, password } = req.body;
 
@@ -71,15 +70,7 @@ router.post("/registro", registroLimiter, async (req, res) => {
         });
 
         res.status(200).json({ mensaje: "¡Revisa tu correo! Te enviamos un código." });
-        console.log("RESEND DATA:", data);
-        console.log("RESEND ERROR:", error);
 
-        if (error) {
-            return res.status(500).json({
-                error: "Error enviando correo",
-                detalle: error
-            });
-        }
 
     } catch (error) {
         console.error("Error en registro:", error);
