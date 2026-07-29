@@ -4,7 +4,7 @@ export async function enviarCorreoVerificacion({
     codigo,
 }) {
 
-    html: `
+    const html = `
                 <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f9f9f9; padding: 40px 20px; margin: 0;">
                     <div style="max-width: 500px; background-color: #ffffff; margin: 0 auto; padding: 40px; border-radius: 8px; border: 1px solid #eeeeee; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
                         
