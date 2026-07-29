@@ -43,6 +43,27 @@ const verificarLector = (req, res, next) => {
     }
 };
 
+import dns from "node:dns/promises";
+
+router.get("/smtp-test", async (req, res) => {
+    try {
+        const ips = await dns.lookup("smtp.gmail.com", { all: true });
+
+        console.log(ips);
+
+        await transporter.verify();
+
+        res.json({
+            ok: true,
+            ips
+        });
+
+    } catch (e) {
+        console.error(e);
+        res.status(500).json(e);
+    }
+});
+
 router.post("/registro", registroLimiter, async (req, res) => {
     try {
         const { email, alias, password } = req.body;
