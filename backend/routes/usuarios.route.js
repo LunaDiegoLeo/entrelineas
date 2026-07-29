@@ -22,7 +22,9 @@ const transporter = nodemailer.createTransport({
     },
     tls: {
         rejectUnauthorized: false
-    }
+    },
+    localAddress: "0.0.0.0",
+    family: 4
 });
 
 const verificarLector = (req, res, next) => {
