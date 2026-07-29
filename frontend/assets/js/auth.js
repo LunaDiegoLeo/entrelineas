@@ -5,35 +5,79 @@ function mostrarNotificacion(mensaje, tipo = 'exito') {
     const notificacion = document.createElement('div');
     notificacion.textContent = mensaje;
     
-    // Estilos del mensaje flotante
-    notificacion.style.position = 'fixed';
-    notificacion.style.bottom = '20px';
-    notificacion.style.right = '20px';
-    notificacion.style.backgroundColor = tipo === 'exito' ? '#28a745' : '#dc3545'; // Verde para éxito, rojo para error
-    notificacion.style.color = 'white';
-    notificacion.style.padding = '15px 25px';
-    notificacion.style.borderRadius = '8px';
-    notificacion.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-    notificacion.style.zIndex = '9999';
-    notificacion.style.fontFamily = 'sans-serif';
-    notificacion.style.opacity = '0';
-    notificacion.style.transform = 'translateY(20px)';
-    notificacion.style.transition = 'all 0.4s ease-in-out';
+    // Le agregamos la clase base y la clase del tipo (exito o error)
+    notificacion.classList.add('notificacion-elegante', `notificacion-${tipo}`);
 
     document.body.appendChild(notificacion);
 
     // Animación de entrada
     setTimeout(() => {
-        notificacion.style.opacity = '1';
-        notificacion.style.transform = 'translateY(0)';
+        notificacion.classList.add('mostrar');
     }, 10);
 
     // Desaparecer después de 3 segundos
     setTimeout(() => {
-        notificacion.style.opacity = '0';
-        notificacion.style.transform = 'translateY(20px)';
-        setTimeout(() => notificacion.remove(), 400); // Espera a que termine la animación para borrarlo del DOM
+        notificacion.classList.remove('mostrar');
+        setTimeout(() => notificacion.remove(), 400); 
     }, 3000);
+}
+
+function confirmarCierreSesion(onConfirm) {
+    // Creamos el fondo oscuro
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay-logout';
+    
+    // Creamos la caja chueca
+    const modal = document.createElement('div');
+    modal.className = 'modal-logout-aesthetic';
+    
+    // Textos
+    const titulo = document.createElement('h3');
+    titulo.textContent = '¿Te vas tan pronto?';
+    
+    const texto = document.createElement('p');
+    texto.textContent = 'Estás a punto de cerrar sesión. ¿Segura que quieres salir del chismecito?';
+    
+    // Contenedor de botones
+    const btnContainer = document.createElement('div');
+    btnContainer.className = 'modal-logout-botones';
+    
+    // Botón de cancelar (Usa tus clases de CSS existentes)
+    const btnCancelar = document.createElement('button');
+    btnCancelar.textContent = 'Mejor me quedo';
+    btnCancelar.className = 'btn btn-purple';
+    
+    // Botón de confirmar (Usa tus clases de CSS existentes)
+    const btnConfirmar = document.createElement('button');
+    btnConfirmar.textContent = 'Sí, cerrar sesión';
+    btnConfirmar.className = 'btn btn-green';
+    
+    // Armamos el lego
+    btnContainer.appendChild(btnCancelar);
+    btnContainer.appendChild(btnConfirmar);
+    modal.appendChild(titulo);
+    modal.appendChild(texto);
+    modal.appendChild(btnContainer);
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+    
+    // Función para cerrar este modal chiquito
+    const cerrar = () => {
+        overlay.classList.remove('mostrar');
+        setTimeout(() => overlay.remove(), 400); // Espera que acabe la animación
+    };
+    
+    // Pequeño truco para que se vea la animación al inyectarlo al DOM
+    setTimeout(() => {
+        overlay.classList.add('mostrar');
+    }, 10);
+
+    // Eventos de los botones
+    btnCancelar.addEventListener('click', cerrar);
+    btnConfirmar.addEventListener('click', () => {
+        cerrar();
+        onConfirm(); // Ejecuta el cierre de sesión real
+    });
 }
 
 function abrirModal() {
@@ -173,14 +217,19 @@ function actualizarMenuUsuario() {
     
     if (alias && btnIngresar) {
         btnIngresar.textContent = `Hola, ${alias}`;
-        btnIngresar.onclick = null; 
         
-        btnIngresar.addEventListener('click', () => {
-            if(confirm('¿Quieres cerrar sesión?')) {
+        const nuevoBtn = btnIngresar.cloneNode(true);
+        btnIngresar.parentNode.replaceChild(nuevoBtn, btnIngresar);
+        
+        nuevoBtn.addEventListener('click', () => {
+            confirmarCierreSesion(() => {
                 localStorage.removeItem('token_revista');
                 localStorage.removeItem('alias_usuario');
-                location.reload(); // Recarga la página instantáneamente
-            }
+                
+                setTimeout(() => {
+                    location.reload(); 
+                }, 300);
+            });
         });
     }
 }

@@ -1454,3 +1454,111 @@ html.dark-mode-auto #footer {
     line-height: 1.5;
     margin: 0;
 }
+
+/* =========================================================================
+   NOTIFICACIONES ESTILO "ENTRE LÍNEAS" (AESTHETIC)
+   ========================================================================= */
+.notificacion-elegante {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    padding: 15px 25px;
+    z-index: 9999;
+    
+    /* El estilo de tu revista */
+    border: 3px solid var(--black);
+    box-shadow: 6px 6px 0px var(--black);
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    border-radius: 2px 15px 5px 20px / 15px 5px 20px 5px; /* Un borde irregular tipo recorte */
+    
+    /* Animación fluida de entrada */
+    opacity: 0;
+    transform: translateY(30px) rotate(5deg);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efecto de rebote al entrar */
+}
+
+/* Cuando la notificación está activa en pantalla */
+.notificacion-elegante.mostrar {
+    opacity: 1;
+    transform: translateY(0) rotate(-2deg); /* Queda ligeramente inclinada, súper aesthetic */
+}
+
+.notificacion-exito {
+    background-color: var(--green); 
+    color: var(--black);
+}
+
+.notificacion-error {
+    background-color: var(--purple); 
+    color: white;
+}
+
+
+/* =========================================================================
+   MODAL DE CONFIRMACIÓN DE LOGOUT (AESTHETIC)
+   ========================================================================= */
+.modal-overlay-logout {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay-logout.mostrar {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-logout-aesthetic {
+    background: white;
+    border: 4px solid var(--black);
+    box-shadow: 8px 8px 0px var(--black);
+    padding: 30px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    /* Borde chueco estilo revista */
+    border-radius: 2px 25px 3px 15px / 25px 5px 15px 3px;
+    transform: rotate(-5deg) scale(0.8);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-overlay-logout.mostrar .modal-logout-aesthetic {
+    transform: rotate(2deg) scale(1);
+}
+
+.modal-logout-aesthetic h3 {
+    font-family: var(--font-ui);
+    color: var(--purple);
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 0px var(--green);
+    line-height: 1.2;
+}
+
+.modal-logout-aesthetic p {
+    font-family: var(--font-text);
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    color: var(--black);
+}
+
+.modal-logout-botones {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
