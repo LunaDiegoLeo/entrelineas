@@ -5,7 +5,7 @@ import rateLimit from "express-rate-limit";
 import { pool } from "../config/db.js";
 import jwt from "jsonwebtoken";
 
-import { enviarCorreoVerificacion } from "../services/email.service.js";
+import { pruebaBrevo } from "../services/email.service.js";
 
 const registroLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
