@@ -51,7 +51,7 @@ export const getNoticiasPorAutor = async (req, res) => {
         const { id } = req.params;
 
         const result = await pool.query(`
-            SELECT titulo, slug, resumen, portada
+            SELECT id, titulo, slug, resumen, portada
             FROM noticias
             WHERE autor_id = $1
             ORDER BY fecha_publicacion DESC

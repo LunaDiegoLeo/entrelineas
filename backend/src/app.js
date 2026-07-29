@@ -13,6 +13,7 @@ import authRoutes from "../routes/auth.routes.js";
 import uploadRoutes from "../routes/upload.routes.js";
 import usuariosRoutes from "../routes/usuarios.route.js";
 const app = express();
+app.set('trust proxy', 1);
 app.use(helmet({
   contentSecurityPolicy: {
     useDefaults: true,
