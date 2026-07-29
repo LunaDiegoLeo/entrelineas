@@ -43,7 +43,6 @@ const verificarLector = (req, res, next) => {
     }
 };
 
-import dns from "node:dns/promises";
 
 router.get("/smtp-test", async (req, res) => {
     try {
