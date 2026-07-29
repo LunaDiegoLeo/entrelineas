@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 import bcrypt from "bcrypt";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import rateLimit from "express-rate-limit";
 import { pool } from "../config/db.js";
 import jwt from "jsonwebtoken";
@@ -14,15 +14,7 @@ const registroLimiter = rateLimit({
 import dns from 'dns';
 dns.setDefaultResultOrder('ipv4first');
 
-const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
-    secure: false,
-    auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
-    }
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const verificarLector = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -70,14 +62,8 @@ router.post("/registro", registroLimiter, async (req, res) => {
             "INSERT INTO usuarios_wp (email, alias, password, token_verificacion) VALUES ($1, $2, $3, $4)",
             [email, alias, passwordHash, tokenHash]
         );
-        try {
-            await transporter.verify();
-            console.log("SMTP conectado correctamente");
-        } catch (err) {
-            console.error("VERIFY ERROR:", err);
-        }
-
-        await transporter.sendMail({
+        
+        await resend.emails.send({
             from: `"Entre Líneas" <${process.env.SENDER_EMAIL}>`,
             to: email,
             subject: "Verifica tu cuenta en Entre Líneas",
