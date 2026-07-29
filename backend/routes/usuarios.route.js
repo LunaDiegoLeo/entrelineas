@@ -7,7 +7,7 @@ import { pool } from "../config/db.js";
 import jwt from "jsonwebtoken";
 const registroLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 3, 
+    max: 3,
     message: { error: "Beba, te pasaste de intentos. Espera 15 minutitos, porfa." }
 });
 
@@ -35,7 +35,7 @@ const verificarLector = (req, res, next) => {
 
     try {
         const decodificado = jwt.verify(token, process.env.JWT_SECRET);
-        req.usuario = decodificado; 
+        req.usuario = decodificado;
         next();
     } catch (error) {
         return res.status(403).json({ error: "Tu sesión expiró o el token no es válido." });
@@ -70,8 +70,12 @@ router.post("/registro", registroLimiter, async (req, res) => {
             "INSERT INTO usuarios_wp (email, alias, password, token_verificacion) VALUES ($1, $2, $3, $4)",
             [email, alias, passwordHash, tokenHash]
         );
-        await transporter.verify();
-        console.log("SMTP conectado");
+        try {
+            await transporter.verify();
+            console.log("SMTP conectado correctamente");
+        } catch (err) {
+            console.error("VERIFY ERROR:", err);
+        }
 
         await transporter.sendMail({
             from: `"Entre Líneas" <${process.env.SENDER_EMAIL}>`,
@@ -137,7 +141,7 @@ router.post("/verificar", async (req, res) => {
             return res.status(400).json({ error: "Esta cuenta ya está verificada. ¡Inicia sesión!" });
         }
 
-        
+
         const esValido = await bcrypt.compare(codigo, usuario.token_verificacion);
 
         if (!esValido) {
@@ -184,13 +188,13 @@ router.post("/login", async (req, res) => {
             return res.status(401).json({ error: "Correo o contraseña incorrectos." });
         }
 
-        
+
         const token = jwt.sign(
-            { 
-                id_usuario: usuario.id_usuario, 
-                alias: usuario.alias 
-            }, 
-            process.env.JWT_SECRET, 
+            {
+                id_usuario: usuario.id_usuario,
+                alias: usuario.alias
+            },
+            process.env.JWT_SECRET,
             { expiresIn: "7d" }
         );
 
@@ -213,8 +217,8 @@ router.post("/login", async (req, res) => {
 router.post("/comentar", verificarLector, async (req, res) => {
     try {
         const { id_noticia, contenido } = req.body;
-        
-        const id_usuario = req.usuario.id_usuario; 
+
+        const id_usuario = req.usuario.id_usuario;
 
         if (!contenido) {
             return res.status(400).json({ error: "No puedes enviar un comentario vacío, beba." });
@@ -228,7 +232,7 @@ router.post("/comentar", verificarLector, async (req, res) => {
             [id_usuario, idNoticiaFinal, contenido]
         );
 
-        res.status(201).json({ 
+        res.status(201).json({
             mensaje: "¡Comentario publicado con éxito!",
             comentario: nuevoComentario.rows[0]
         });
