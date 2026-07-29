@@ -958,3 +958,7 @@ html.dark-mode-auto .modal-overlay {
     justify-content: center;
     flex-wrap: wrap;
 }
+
+html.dark-mode-auto .modal-overlay-logout {
+    background-color: rgba(255, 255, 255, 0.6) !important; 
+}

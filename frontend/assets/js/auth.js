@@ -213,15 +213,21 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
 
 function actualizarMenuUsuario() {
     const alias = localStorage.getItem('alias_usuario');
-    const btnIngresar = document.getElementById('btn-abrir-modal'); 
+    const btnIngresarOriginal = document.getElementById('btn-abrir-modal'); 
     
-    if (alias && btnIngresar) {
+    if (alias && btnIngresarOriginal) {
+        const btnIngresar = btnIngresarOriginal.cloneNode(true);
+        btnIngresarOriginal.parentNode.replaceChild(btnIngresar, btnIngresarOriginal);
+        
         btnIngresar.textContent = `Hola, ${alias}`;
         
-        const nuevoBtn = btnIngresar.cloneNode(true);
-        btnIngresar.parentNode.replaceChild(nuevoBtn, btnIngresar);
+        btnIngresar.removeAttribute('onclick'); 
+        if (btnIngresar.tagName === 'A') {
+            btnIngresar.href = "javascript:void(0)"; 
+        }
         
-        nuevoBtn.addEventListener('click', () => {
+        btnIngresar.addEventListener('click', (e) => {
+            e.preventDefault(); 
             confirmarCierreSesion(() => {
                 localStorage.removeItem('token_revista');
                 localStorage.removeItem('alias_usuario');
