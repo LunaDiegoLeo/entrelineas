@@ -11,8 +11,8 @@ const registroLimiter = rateLimit({
     message: { error: "Beba, te pasaste de intentos. Espera 15 minutitos, porfa." }
 });
 
-console.log("GMAIL_USER:", process.env.GMAIL_USER);
-console.log("GMAIL_PASS existe:", !!process.env.GMAIL_PASS);
+import dns from 'dns';
+dns.setDefaultResultOrder('ipv4first');
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com", // Le decimos exactamente a dónde ir
@@ -22,9 +22,7 @@ const transporter = nodemailer.createTransport({
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_PASS
     },
-    connectionTimeout: 30000,
-    greetingTimeout: 30000,
-    socketTimeout: 30000,
+    family: 4
 });
 
 const verificarLector = (req, res, next) => {
