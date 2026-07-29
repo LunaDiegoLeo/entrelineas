@@ -70,9 +70,25 @@ family=Courier+Prime:wght@400;700&family=Permanent+Marker&family=Space+Grotesk:w
         <div class="nav-links">
             <a href="busqueda.html">Buscar</a>
         </div>
+        <div class="menu-autenticacion">
+            <!-- Estado 1: Sin sesión -->
+            <button id="btn-abrir-modal" class="btn-ingresar" onclick="abrirModal()">
+                Iniciar Sesión / Registrarse
+            </button>
+
+            <!-- Estado 2: Con sesión (Oculto por defecto) -->
+            <div id="menu-usuario-logueado" class="oculto" style="display: flex; gap: 15px; align-items: center;">
+                <span id="saludo-usuario" style="font-weight: bold; color: #111;"></span>
+                <button id="btn-cerrar-sesion" class="btn-ingresar"
+                    style="background: transparent; border: 1px solid #111; padding: 8px 12px; border-radius: 6px; cursor: pointer;">
+                    Salir
+                </button>
+            </div>
+        </div>
 
         <button id="btn-theme"
-            style="cursor: pointer; font-size: 1.5rem; background: none; border: none; color: inherit;" aria-label="Cambiar tema oscuro o claro">
+            style="cursor: pointer; font-size: 1.5rem; background: none; border: none; color: inherit;"
+            aria-label="Cambiar tema oscuro o claro">
             <i class="fa-solid fa-moon"></i>
         </button>
     </nav>
@@ -109,6 +125,62 @@ family=Courier+Prime:wght@400;700&family=Permanent+Marker&family=Space+Grotesk:w
             <img id="portada" class="cover-image" src="">
         </article>
     </main>
+    <div id="modal-auth" class="modal-overlay oculto">
+        <div class="modal-contenedor">
+            <span class="btn-cerrar" id="cerrar-modal">&times;</span>
+
+            <div class="modal-tabs" id="tabs-auth">
+                <button id="tab-login" class="tab-activa" onclick="cambiarFormulario('login')">Ingresar</button>
+                <button id="tab-registro" onclick="cambiarFormulario('registro')">Crear Cuenta</button>
+            </div>
+
+            <form id="form-login" class="form-auth">
+                <h2>¡Bienvenidx de nuevo!</h2>
+                <p>Ingresa para dejar tu comentario.</p>
+                <input type="email" id="login-email" placeholder="Correo electrónico" required>
+                <input type="password" id="login-password" placeholder="Contraseña" required>
+                <button type="submit" class="btn-principal">Iniciar Sesión</button>
+            </form>
+
+            <form id="form-registro" class="form-auth oculto">
+                <h2>Únete al chismecito</h2>
+                <p>Crea tu cuenta para participar.</p>
+                <input type="email" id="reg-email" placeholder="Correo electrónico" required>
+                <input type="text" id="reg-alias" placeholder="Tu Alias (Ej. Chris)" maxlength="30" required>
+                <input type="password" id="reg-password" placeholder="Crea una contraseña" required>
+                <button type="submit" class="btn-principal">Registrarme</button>
+            </form>
+
+
+            <form id="form-verificacion" class="form-auth oculto">
+                <h2>Revisa tu correo</h2>
+                <p>Te enviamos un código de 6 dígitos.</p>
+                <input type="email" id="ver-email" placeholder="Confirma tu correo" required>
+                <input type="text" id="ver-codigo" placeholder="Código (Ej. 123456)" maxlength="6" required>
+                <button type="submit" class="btn-principal">Verificar Cuenta</button>
+            </form>
+        </div>
+    </div>
+    <section class="comentarios-section" style="padding-bottom: 10px;">
+        <h3>Comentarios</h3>
+
+        <!-- Caja para escribir (Se bloquea si no hay sesión) -->
+        <form id="form-comentario" class="caja-comentar">
+            <textarea id="texto-comentario" placeholder="¿Qué opinas? Déjanos tu comentario aquí..."
+                required></textarea>
+            <button type="submit" id="btn-enviar-comentario" class="btn-principal">Publicar</button>
+            <p id="mensaje-login-comentario" class="oculto"
+                style="background-color: #f9f9f9; padding: 10px; border-radius: 5px; margin-top: 10px; text-align: center;">
+                Debes <a href="#" onclick="abrirModal(); return false;">iniciar sesión</a> para comentar.
+            </p>
+        </form>
+
+        <!-- Lista donde se inyectarán los comentarios de la BD -->
+        <div id="lista-comentarios" class="lista-comentarios">
+            <p class="cargando-texto">Cargando chismecito...</p>
+        </div>
+    </section>
+
     <footer class="footer cutout-box" id="footer">
         <h2 class="marker-text">Entre Líneas</h2>
         <p>
@@ -119,6 +191,8 @@ family=Courier+Prime:wght@400;700&family=Permanent+Marker&family=Space+Grotesk:w
             © 2026 Entre Líneas — Todos los derechos reservados.
         </div>
     </footer>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/comentarios.js"></script>
     <script src="assets/js/noticia.js"></script>
 </body>
 

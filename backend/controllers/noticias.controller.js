@@ -5,7 +5,7 @@ export const getNoticias = async (req, res) => {
     try {
 
         const result = await pool.query(`
-            SELECT titulo, slug, resumen, portada
+            SELECT id, titulo, slug, resumen, portada
             FROM noticias
             ORDER BY fecha_publicacion DESC
             LIMIT 6
@@ -29,7 +29,7 @@ export const getTrending = async (req, res) => {
     try {
 
         const result = await pool.query(`
-            SELECT titulo, slug
+            SELECT id, titulo, slug
             FROM noticias
             ORDER BY fecha_publicacion DESC
             LIMIT 6
@@ -56,7 +56,7 @@ export const getNoticiaPorSlug = async (req, res) => {
         const { slug } = req.params;
 
         const result = await pool.query(`
-            SELECT titulo, slug, resumen, contenido, portada, fecha_publicacion, nombre_autor, foto, nombre
+            SELECT id, titulo, slug, resumen, contenido, portada, fecha_publicacion, nombre_autor, foto, nombre
             FROM noticias n
             JOIN autores a
                 ON n.autor_id = a.id_autor
@@ -84,7 +84,7 @@ export const buscarPorTitulo = async (req, res) => {
         const { titulo } = req.query;
 
         const result = await pool.query(`
-            SELECT titulo, slug, resumen, portada
+            SELECT id, titulo, slug, resumen, portada
             FROM noticias
             WHERE titulo ILIKE $1
         `, [`%${titulo}%`]);
@@ -111,7 +111,7 @@ export const getNoticiasPorFecha = async (req, res) => {
         } = req.query;
 
         const result = await pool.query(`
-            SELECT titulo, slug, resumen, portada
+            SELECT id, titulo, slug, resumen, portada
             FROM noticias
             WHERE fecha_publicacion
                 BETWEEN $1 AND $2

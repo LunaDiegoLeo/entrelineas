@@ -393,7 +393,7 @@ function renderPagina() {
                 </p>
 
                 <a
-                    href="noticia.html?slug=${noticia.slug}"
+                    href="noticia.html?slug=${noticia.slug}&id=${noticia.id}"
                     class="btn ${button}"
                 >
                     Leer más

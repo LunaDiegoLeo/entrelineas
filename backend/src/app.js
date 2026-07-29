@@ -11,6 +11,7 @@ import autoresRoutes from "../routes/autores.routes.js";
 import categoriasRoutes from "../routes/categorias.routes.js";
 import authRoutes from "../routes/auth.routes.js"; 
 import uploadRoutes from "../routes/upload.routes.js";
+import usuariosRoutes from "../routes/usuarios.route.js";
 const app = express();
 app.use(helmet({
   contentSecurityPolicy: {
@@ -26,7 +27,7 @@ app.use(helmet({
   }
 }));
 app.use(cors({
-    origin: "https://entre-lineas-f6ek.onrender.com", 
+    origin: "https://entre-lineas-f6ek.onrender.com",
     credentials: true
 }));
 app.use((req, res, next) => {
@@ -53,6 +54,7 @@ app.use("/api/autores", autoresRoutes);
 app.use("/api/categorias", categoriasRoutes);
 app.use("/api/auth", authRoutes); 
 app.use("/api/upload", uploadRoutes);
+app.use("/api/usuarios", usuariosRoutes);
 
 app.get("/", (req, res) => {
     res.send("¡Bienvenido a Entre Líneas API!");
