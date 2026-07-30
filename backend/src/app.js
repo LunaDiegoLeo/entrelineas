@@ -4,48 +4,80 @@ dotenv.config();
 import helmet from 'helmet';
 import express from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser"; 
-import rateLimit from "express-rate-limit"; 
+import cookieParser from "cookie-parser";
+import rateLimit from "express-rate-limit";
 
 import noticiasRoutes from "../routes/noticias.routes.js";
 import autoresRoutes from "../routes/autores.routes.js";
 import categoriasRoutes from "../routes/categorias.routes.js";
-import authRoutes from "../routes/auth.routes.js"; 
+import authRoutes from "../routes/auth.routes.js";
 import uploadRoutes from "../routes/upload.routes.js";
 import usuariosRoutes from "../routes/usuarios.route.js";
 const app = express();
-app.set('trust proxy', 1);
-app.use(helmet({
-  contentSecurityPolicy: {
-    useDefaults: true,
-    directives: {
-      "default-src": ["'self'"],
-      "script-src": ["'self'", "https://www.googletagmanager.com"], 
-      "style-src": ["'self'", "https://cdnjs.cloudflare.com"], 
-      "font-src": ["'self'", "https://cdnjs.cloudflare.com", "data:"],
-      "img-src": ["'self'", "data:", "https:"],
-      "connect-src": ["'self'", "https://www.google-analytics.com", "https://region1.google-analytics.com"]
-    }
-  }
-}));
+app.disable("x-powered-by");
+app.set('trust proxy', true);
+app.use(
+    helmet({
+        contentSecurityPolicy: {
+            useDefaults: true,
+            directives: {
+                defaultSrc: ["'self'"],
+
+                scriptSrc: [
+                    "'self'",
+                    "https://www.googletagmanager.com",
+                    "https://www.google-analytics.com"
+                ],
+
+                styleSrc: [
+                    "'self'",
+                    "'unsafe-inline'",
+                    "https://cdnjs.cloudflare.com"
+                ],
+
+                fontSrc: [
+                    "'self'",
+                    "https://cdnjs.cloudflare.com",
+                    "data:"
+                ],
+
+                imgSrc: [
+                    "'self'",
+                    "data:",
+                    "https:"
+                ],
+
+                connectSrc: [
+                    "'self'",
+                    "https://www.google-analytics.com",
+                    "https://region1.google-analytics.com"
+                ]
+            }
+        }
+    })
+);
 app.use(cors({
     origin: "https://entre-lineas-f6ek.onrender.com",
     credentials: true
 }));
 app.use((req, res, next) => {
     res.setHeader("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
+    res.setHeader(
+        "Referrer-Policy",
+        "strict-origin-when-cross-origin"
+    );
     next();
 });
 
 app.use(express.json());
-app.use(cookieParser()); 
+app.use(cookieParser());
 
 const limitadorGeneral = rateLimit({
-    windowMs: 15 * 60 * 1000, 
-    max: 100, 
+    windowMs: 15 * 60 * 1000,
+    max: 100,
     message: { error: "¡Tranquila beba! Estás recargando la página muy rápido. Toca soportar y esperar 15 minutos." },
-    standardHeaders: true, 
-    legacyHeaders: false, 
+    standardHeaders: true,
+    legacyHeaders: false,
 });
 
 app.use("/api", limitadorGeneral);
@@ -54,7 +86,7 @@ app.use("/api", limitadorGeneral);
 app.use("/api/noticias", noticiasRoutes);
 app.use("/api/autores", autoresRoutes);
 app.use("/api/categorias", categoriasRoutes);
-app.use("/api/auth", authRoutes); 
+app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/usuarios", usuariosRoutes);
 
@@ -63,6 +95,22 @@ app.get("/", (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
+app.use((req,res)=>{
+
+    res.status(404).json({
+        error:"Ruta no encontrada."
+    });
+
+});
+app.use((err,req,res,next)=>{
+
+    console.error(err);
+
+    res.status(500).json({
+        error:"Ocurrió un error interno."
+    });
+
+});
 app.listen(PORT, () => {
     console.log(`Servidor ejecutándose en puerto ${PORT}`);
 });

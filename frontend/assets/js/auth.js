@@ -124,9 +124,44 @@ const API_URL = 'https://entrelineas.onrender.com/api/usuarios';
 document.getElementById('form-registro').addEventListener('submit', async (e) => {
     e.preventDefault(); 
     
-    const email = document.getElementById('reg-email').value;
-    const alias = document.getElementById('reg-alias').value;
+    const email = document.getElementById('reg-email').value.trim();
+    const alias = document.getElementById('reg-alias').value.trim();
     const password = document.getElementById('reg-password').value;
+    if (email === "" || alias === "" || password === "") {
+        mostrarNotificacion("Completa todos los campos.", "error");
+        return;
+    }
+
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!regexEmail.test(email)) {
+        mostrarNotificacion("Ingresa un correo electrónico válido.", "error");
+        return;
+    }
+
+    if (!/^[a-zA-Z0-9_]{3,20}$/.test(alias)) {
+        mostrarNotificacion(
+            "El alias debe tener entre 3 y 20 caracteres y solo puede contener letras, números y guiones bajos.",
+            "error"
+        );
+        return;
+    }
+
+    if (password.length < 8) {
+        mostrarNotificacion(
+            "La contraseña debe tener al menos 8 caracteres.",
+            "error"
+        );
+        return;
+    }
+
+    if (password.length > 64) {
+        mostrarNotificacion(
+            "La contraseña no puede superar los 64 caracteres.",
+            "error"
+        );
+        return;
+    }
     
     try {
         const respuesta = await fetch(`${API_URL}/registro`, {
@@ -152,9 +187,24 @@ document.getElementById('form-registro').addEventListener('submit', async (e) =>
 document.getElementById('form-verificacion').addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const email = document.getElementById('ver-email').value;
-    const codigo = document.getElementById('ver-codigo').value;
-    
+    const email = document.getElementById('ver-email').value.trim();
+    const codigo = document.getElementById('ver-codigo').value.trim();
+    if (email === "" || codigo === "") {
+        mostrarNotificacion("Completa todos los campos.", "error");
+        return;
+    }
+
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!regexEmail.test(email)) {
+        mostrarNotificacion("Ingresa un correo electrónico válido.", "error");
+        return;
+    }
+
+    if (!/^\d{6}$/.test(codigo)) {
+        mostrarNotificacion("El código debe contener 6 dígitos.", "error");
+        return;
+    }
     try {
         const respuesta = await fetch(`${API_URL}/verificar`, {
             method: 'POST',
@@ -179,9 +229,19 @@ document.getElementById('form-verificacion').addEventListener('submit', async (e
 document.getElementById('form-login').addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const email = document.getElementById('login-email').value;
+    const email = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-password').value;
-    
+    if (email === "" || password === "") {
+        mostrarNotificacion("Completa todos los campos.", "error");
+        return;
+    }
+
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!regexEmail.test(email)) {
+        mostrarNotificacion("Ingresa un correo electrónico válido.", "error");
+        return;
+    }
     try {
         const respuesta = await fetch(`${API_URL}/login`, {
             method: 'POST',

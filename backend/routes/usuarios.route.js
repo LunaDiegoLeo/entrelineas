@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import rateLimit from "express-rate-limit";
 import { pool } from "../config/db.js";
 import jwt from "jsonwebtoken";
+import validator from "validator";
 
 import { enviarCorreoVerificacion } from "../services/email.service.js";
 
@@ -11,6 +12,26 @@ const registroLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
     max: 3,
     message: { error: "Beba, te pasaste de intentos. Espera 15 minutitos, porfa." }
+});
+
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: {
+        error: "Demasiados intentos de inicio de sesión. Intenta nuevamente en 15 minutos."
+    }
+});
+
+const verificarLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: {
+        error: "Demasiados intentos de verificación. Espera 15 minutos."
+    }
 });
 
 
@@ -39,7 +60,27 @@ router.post("/registro", registroLimiter, async (req, res) => {
         const { email, alias, password } = req.body;
 
         if (!email || !alias || !password) {
-            return res.status(400).json({ error: "Faltan datos, amix." });
+            return res.status(400).json({
+                error: "Faltan datos, amix."
+            });
+        }
+
+        if (!validator.isEmail(email)) {
+            return res.status(400).json({
+                error: "El correo electrónico no es válido amix."
+            });
+        }
+
+        if (!/^[a-zA-Z0-9_]{3,20}$/.test(alias)) {
+            return res.status(400).json({
+                error: "El alias solo puede contener letras, números y guiones bajos (3-20 caracteres) amix."
+            });
+        }
+
+        if (password.length < 8 || password.length > 64) {
+            return res.status(400).json({
+                error: "La contraseña debe tener entre 8 y 64 caracteres amix."
+            });
         }
 
         const existe = await pool.query(
@@ -78,7 +119,7 @@ router.post("/registro", registroLimiter, async (req, res) => {
     }
 });
 
-router.post("/verificar", async (req, res) => {
+router.post("/verificar", verificarLimiter, async (req, res) => {
     try {
         const { email, codigo } = req.body;
 
@@ -120,9 +161,20 @@ router.post("/verificar", async (req, res) => {
     }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", loginLimiter, async (req, res) => {
     try {
         const { email, password } = req.body;
+        if (!validator.isEmail(email)) {
+            return res.status(400).json({
+                error: "Correo electrónico inválido."
+            });
+        }
+
+        if (typeof password !== "string" || password.length === 0) {
+            return res.status(400).json({
+                error: "Contraseña inválida."
+            });
+        }
 
         if (!email || !password) {
             return res.status(400).json({ error: "Ingresa tu correo y contraseña, beba." });
@@ -179,8 +231,24 @@ router.post("/comentar", verificarLector, async (req, res) => {
 
         const id_usuario = req.usuario.id_usuario;
 
-        if (!contenido) {
-            return res.status(400).json({ error: "No puedes enviar un comentario vacío, beba." });
+        if (!contenido || typeof contenido !== "string") {
+            return res.status(400).json({
+                error: "No puedes enviar un comentario vacío."
+            });
+        }
+
+        const comentario = contenido.trim();
+
+        if (comentario.length === 0) {
+            return res.status(400).json({
+                error: "El comentario está vacío."
+            });
+        }
+
+        if (comentario.length > 500) {
+            return res.status(400).json({
+                error: "El comentario no puede superar los 500 caracteres."
+            });
         }
 
         const idNoticiaFinal = id_noticia || null;
@@ -188,7 +256,7 @@ router.post("/comentar", verificarLector, async (req, res) => {
         const nuevoComentario = await pool.query(
             `INSERT INTO comentarios_wp (id_usuario, id_noticia, contenido) 
              VALUES ($1, $2, $3) RETURNING *`,
-            [id_usuario, idNoticiaFinal, contenido]
+            [id_usuario, idNoticiaFinal, comentario]
         );
 
         res.status(201).json({

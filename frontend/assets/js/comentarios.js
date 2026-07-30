@@ -24,34 +24,66 @@ function revisarSesionComentarios() {
 
 async function cargarComentarios() {
     try {
-        const urlFetch = idNoticiaActual 
-            ? `${API_URL}/comentarios?id_noticia=${idNoticiaActual}` 
+        const urlFetch = idNoticiaActual
+            ? `${API_URL}/comentarios?id_noticia=${idNoticiaActual}`
             : `${API_URL}/comentarios`;
 
         const respuesta = await fetch(urlFetch);
         const comentarios = await respuesta.json();
 
-        listaComentarios.innerHTML = ''; 
+        listaComentarios.innerHTML = '';
 
         if (comentarios.length === 0) {
-            listaComentarios.innerHTML = '<p style="font-style: italic; background-color: #f9f9f9; padding: 10px;">Sé lx primerx en dejar un chismecito </p>';
+            const mensaje = document.createElement("p");
+            mensaje.style.fontStyle = "italic";
+            mensaje.style.backgroundColor = "#f9f9f9";
+            mensaje.style.padding = "10px";
+            mensaje.textContent = "Sé lx primerx en dejar un chismecito";
+            listaComentarios.appendChild(mensaje);
             return;
         }
 
         comentarios.forEach(com => {
+
             const fechaBonita = new Date(com.fecha_creacion).toLocaleDateString();
-            
-            listaComentarios.innerHTML += `
-                <div class="comentario-item">
-                    <div class="comentario-autor">
-                        ${com.alias} <span class="comentario-fecha">${fechaBonita}</span>
-                    </div>
-                    <p class="comentario-texto">${com.contenido}</p>
-                </div>
-            `;
+
+            const comentarioItem = document.createElement("div");
+            comentarioItem.className = "comentario-item";
+
+            const autor = document.createElement("div");
+            autor.className = "comentario-autor";
+
+            autor.appendChild(
+                document.createTextNode(`${com.alias} `)
+            );
+
+            const fecha = document.createElement("span");
+            fecha.className = "comentario-fecha";
+            fecha.textContent = fechaBonita;
+
+            autor.appendChild(fecha);
+
+            const texto = document.createElement("p");
+            texto.className = "comentario-texto";
+            texto.textContent = com.contenido;
+
+            comentarioItem.appendChild(autor);
+            comentarioItem.appendChild(texto);
+
+            listaComentarios.appendChild(comentarioItem);
+
         });
+
     } catch (error) {
-        listaComentarios.innerHTML = '<p style="background-color: #f9f9f9; padding: 10px;">Error al cargar los comentarios.</p>';
+
+        listaComentarios.innerHTML = "";
+
+        const mensaje = document.createElement("p");
+        mensaje.style.backgroundColor = "#f9f9f9";
+        mensaje.style.padding = "10px";
+        mensaje.textContent = "Error al cargar los comentarios.";
+
+        listaComentarios.appendChild(mensaje);
     }
 }
 
