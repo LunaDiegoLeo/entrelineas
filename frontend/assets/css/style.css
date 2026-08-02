@@ -1154,6 +1154,7 @@ html.dark-mode-auto {
     filter: invert(1) hue-rotate(180deg);
 }
 
+html.dark-mode-auto img,
 html.dark-mode-auto video,
 html.dark-mode-auto iframe,
 html.dark-mode-auto .card-image,
