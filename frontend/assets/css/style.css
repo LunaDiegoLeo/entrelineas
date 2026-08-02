@@ -1154,12 +1154,17 @@ html.dark-mode-auto {
     filter: invert(1) hue-rotate(180deg);
 }
 
-html.dark-mode-auto img,
 html.dark-mode-auto video,
 html.dark-mode-auto iframe,
 html.dark-mode-auto .card-image,
 html.dark-mode-auto #footer {
     filter: invert(1) hue-rotate(180deg);
+}
+
+html.dark-mode-auto .content-image,
+html.dark-mode-auto .cover-image {
+    border-color: white;
+    box-shadow: 6px 6px 0 white;
 }
 
 html.dark-mode-auto .modal-overlay {
