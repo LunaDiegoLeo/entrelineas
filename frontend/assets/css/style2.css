@@ -175,60 +175,59 @@ img {
 }
 
 /* =========================================================================
-   SCROLL HORIZONTAL AESTHETIC PARA "NUESTRAS PLUMAS"
+   SCROLL HORIZONTAL AESTHETIC CORREGIDO
    ========================================================================= */
 #authors-container {
-    display: flex;
-    flex-wrap: nowrap; /* Evita que las tarjetas se vayan para abajo */
-    overflow-x: auto; /* Activa el scroll horizontal */
+    display: flex !important; /* Matamos el comportamiento de grid-layout */
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
     overflow-y: hidden;
-    gap: 25px; /* Espacio entre las tarjetas */
+    gap: 25px;
     
-    /* Damos padding para que las sombras de tus tarjetas no se corten */
-    padding-bottom: 25px; 
-    padding-top: 15px;
-    padding-left: 10px;
-    padding-right: 10px;
+    /* ✨ LA SOLUCIÓN AL MISTERIO ✨ */
+    justify-content: flex-start !important; /* Obliga a empezar desde la izquierda real */
+    width: 100%;
     
-    /* Efectos premium para celulares */
+    /* Ajustamos el padding para que no corte sombras ni el inicio */
+    padding: 20px 25px 35px 25px; 
+    scroll-padding-left: 25px; /* Le dice al imán dónde detenerse al inicio */
+    
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; /* Extra fluidez para iOS */
 }
 
-/* Evitamos que las tarjetas se apachurren al juntarse */
-#authors-container > * {
+/* Evitamos que las tarjetas polaroid se apachurren */
+#authors-container > .polaroid {
     flex: 0 0 auto; 
-    width: 320px; /* Ajusta este valor si tus tarjetas son más anchas o delgadas */
-    scroll-snap-align: center; /* Efecto imán: la tarjeta se centra al soltar el scroll */
+    width: 280px; /* Un tamaño ideal para que quepan en celular y compu */
+    scroll-snap-align: start; /* Cambiamos a 'start' para que la tarjeta se alinee a la izquierda, no al centro */
 }
 
-/* ✨ LA MAGIA: PERSONALIZAR LA BARRA DE SCROLL (ESTILO BRUTALISTA) ✨ */
+/* 🎨 BARRA DE SCROLL (ESTILO BRUTALISTA) */
 #authors-container::-webkit-scrollbar {
-    height: 16px; /* Grosor de la barra horizontal */
+    height: 14px;
 }
 
-/* El "carril" por donde se mueve la barra */
 #authors-container::-webkit-scrollbar-track {
     background: white;
     border: 3px solid var(--black);
-    border-radius: 10px; /* Bordes redondeados pero gruesos */
-    box-shadow: 4px 4px 0px var(--black) inset; /* Sombra interna para darle profundidad */
+    border-radius: 10px;
+    box-shadow: 3px 3px 0px var(--black) inset;
+    margin: 0 20px; /* Despega un poquito la barra de las orillas */
 }
 
-/* El "pulgar" (la parte que agarras para mover) */
 #authors-container::-webkit-scrollbar-thumb {
-    background-color: var(--purple); /* Usamos tu morado hermoso */
+    background-color: var(--purple);
     border: 3px solid var(--black);
     border-radius: 10px;
     cursor: grab;
 }
 
-/* Cuando pasas el mouse por encima de la barra */
 #authors-container::-webkit-scrollbar-thumb:hover {
-    background-color: var(--green); /* Cambia a tu verde chillón, ¡súper dinámico! */
+    background-color: var(--green);
 }
 
-/* Cuando le haces clic a la barra */
 #authors-container::-webkit-scrollbar-thumb:active {
     cursor: grabbing;
 }
