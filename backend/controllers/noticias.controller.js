@@ -8,7 +8,7 @@ export const getNoticias = async (req, res) => {
             SELECT id, titulo, slug, resumen, portada
             FROM noticias
             ORDER BY fecha_publicacion DESC
-            LIMIT 6
+            LIMIT 4
         `);
 
         res.json(result.rows);
