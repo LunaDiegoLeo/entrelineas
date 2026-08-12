@@ -184,11 +184,10 @@ img {
     overflow-y: hidden;
     gap: 25px;
     
-    /* ✨ LA SOLUCIÓN AL MISTERIO ✨ */
     justify-content: flex-start !important; /* Obliga a empezar desde la izquierda real */
     width: 100%;
+    align-items: center !important;
     
-    /* Ajustamos el padding para que no corte sombras ni el inicio */
     padding: 20px 25px 35px 25px; 
     scroll-padding-left: 25px; /* Le dice al imán dónde detenerse al inicio */
     
@@ -197,14 +196,14 @@ img {
     -webkit-overflow-scrolling: touch; /* Extra fluidez para iOS */
 }
 
-/* Evitamos que las tarjetas polaroid se apachurren */
 #authors-container > .polaroid {
     flex: 0 0 auto; 
     width: 280px; /* Un tamaño ideal para que quepan en celular y compu */
     scroll-snap-align: start; /* Cambiamos a 'start' para que la tarjeta se alinee a la izquierda, no al centro */
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
 }
 
-/* 🎨 BARRA DE SCROLL (ESTILO BRUTALISTA) */
 #authors-container::-webkit-scrollbar {
     height: 14px;
 }
