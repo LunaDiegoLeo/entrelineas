@@ -74,7 +74,7 @@ app.use(cookieParser());
 
 const limitadorGeneral = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 10000,
+    max: 1000000,
     message: { error: "¡Tranquila beba! Estás recargando la página muy rápido. Toca soportar y esperar 15 minutos." },
     standardHeaders: true,
     legacyHeaders: false,
