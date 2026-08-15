@@ -55,7 +55,7 @@ async function cargarNoticiasInvitadxs() {
     try {
 
         const responseInvitadxs = await fetch(
-            `${API_BASE}/noticias/invitadxs`
+            `${API_BASE}/autores/invitadxs`
         );
 
         if (!responseInvitadxs.ok) {
