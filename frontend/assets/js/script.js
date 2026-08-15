@@ -1,6 +1,7 @@
 console.log("JS CARGADO");
 const newsContainer = document.getElementById("news-container");
 const authorsContainer = document.getElementById("authors-container");
+const newsContainerInvitadxs = document.getElementById("news-container-invitadxs");
 
 
 
@@ -21,7 +22,7 @@ async function cargarNoticias() {
                 `HTTP ERROR: ${response.status}`
             );
         }
-
+        
         const noticias = await response.json();
 
         console.log("Noticias:", noticias);
@@ -31,8 +32,8 @@ async function cargarNoticias() {
             renderNoticias([noticias]);
             return;
         }
-
         renderNoticias(noticias);
+
 
     } catch (error) {
 
@@ -47,6 +48,94 @@ async function cargarNoticias() {
             </p>
         `;
     }
+}
+
+async function cargarNoticiasInvitadxs() {
+
+    try {
+
+        const responseInvitadxs = await fetch(
+            `${API_BASE}/noticias/invitadxs`
+        );
+
+        if (!responseInvitadxs.ok) {
+            throw new Error(
+                `HTTP ERROR: ${responseInvitadxs.status}`
+            );
+        }
+
+        const noticiasInvitadxs = await responseInvitadxs.json();
+
+        console.log("Noticias Invitadxs:", noticiasInvitadxs);
+
+        if (!Array.isArray(noticiasInvitadxs)) {
+            renderNoticiasInvitadxs([noticiasInvitadxs]);
+            return;
+        }
+
+        renderNoticiasInvitadxs(noticiasInvitadxs);
+
+
+    } catch (error) {
+
+        console.error(
+            "Error cargando noticias:",
+            error
+        );
+
+        newsContainerInvitadxs.innerHTML = `
+            <p style="font-size:1.2rem;">
+                Error cargando noticias.
+            </p>
+        `;
+    }
+}
+
+function renderInvitadxs(invitados) {
+    if (!newsContainerInvitadxs) {
+        console.error("No existe el contenedor #news-container-invitadxs");
+        return;
+    }
+
+    newsContainerInvitadxs.innerHTML = "";
+
+    invitados.forEach((invitado, index) => {
+        // Intercalamos colores de los botones para mantener tu estética
+        const btnColor = index % 2 === 0 ? "btn-purple" : "btn-green";
+        
+        // Foto por defecto por si no tienen
+        const foto = invitado.foto && invitado.foto !== "" 
+            ? "assets/images/autores/" + invitado.foto 
+            : "assets/images/autores/default-autor.png";
+
+        newsContainerInvitadxs.innerHTML += `
+            <article class="card-boceto">
+                <!-- Título arriba -->
+                <h3 class="boceto-titulo marker-text">
+                    ${invitado.titulo} -${invitado.nombre_autor}
+                </h3>
+                
+                <div class="boceto-contenido">
+                    <!-- Foto chueca a la izquierda -->
+                    <div class="boceto-foto-wrapper">
+                        <div class="tape tape-top"></div>
+                        <img src="${foto}" alt="Foto de ${invitado.nombre_autor}" class="boceto-foto">
+                    </div>
+                    
+                    <!-- Resumen y botón a la derecha -->
+                    <div class="boceto-texto">
+                        <p>${invitado.invitado_resumen}</p>
+                        
+                        <a href="noticia.html?slug=${invitado.slug}" 
+                           class="btn ${btnColor}" 
+                           aria-label="Leer más de ${invitado.nombre_autor}">
+                           Leer más
+                        </a>
+                    </div>
+                </div>
+            </article>
+        `;
+    });
 }
 
 function renderNoticias(noticias) {
@@ -344,6 +433,7 @@ document.addEventListener(
 
         cargarNoticias();
         cargarAutores();
+        cargarNoticiasInvitadxs();
 
     }
 );

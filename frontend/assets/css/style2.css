@@ -381,6 +381,94 @@ img {
 
 .cat6 { top: 15%; right: -5%; transform: rotate(7deg); }
 
+/* =========================================================================
+   ESTILOS PARA TARJETAS DE INVITADXS (ESTILO BOCETO / SCRAPBOOK)
+   ========================================================================= */
+
+/* Contenedor principal (Asegúrate de ponerle esta clase a tu div en el HTML) */
+.invitados-grid {
+    display: flex;
+    flex-direction: column; /* Una debajo de otra, como en tu lista */
+    gap: 30px;
+    max-width: 800px; /* Para que no se estiren demasiado en compu */
+    margin: 0 auto;
+}
+
+/* La tarjeta con borde dibujado */
+.card-boceto {
+    background-color: white;
+    border: 3px solid var(--black);
+    /* Borde súper irregular para simular el trazo a mano de tu dibujo */
+    border-radius: 5px 25px 4px 15px / 25px 4px 15px 5px; 
+    box-shadow: 6px 6px 0px var(--black);
+    padding: 20px 25px;
+    transition: transform 0.3s ease;
+}
+
+.card-boceto:hover {
+    transform: translateY(-5px);
+}
+
+/* El título que va en la parte superior */
+.boceto-titulo {
+    font-size: 1.8rem;
+    color: var(--black);
+    margin-bottom: 15px;
+    border-bottom: 2px dashed var(--black); /* Línea de separación sutil */
+    padding-bottom: 10px;
+}
+
+/* El contenedor que pone la foto y el texto lado a lado */
+.boceto-contenido {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+/* El contenedor de la foto para darle la rotación */
+.boceto-foto-wrapper {
+    position: relative;
+    flex-shrink: 0;
+    transform: rotate(-6deg); /* Inclinada hacia la izquierda, como tu dibujo */
+}
+
+.boceto-foto {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 3px solid var(--black);
+    background: white;
+    padding: 4px;
+}
+
+.boceto-texto {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.boceto-texto p {
+    font-family: var(--font-text);
+    font-size: 1.1rem;
+    color: var(--black);
+    line-height: 1.5;
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .boceto-contenido {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .boceto-foto-wrapper {
+        align-self: center; /* Centra la fotito en celular */
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+}
 
 
 /* =========================================================================

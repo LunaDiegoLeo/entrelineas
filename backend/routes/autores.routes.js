@@ -10,6 +10,7 @@ const router = Router();
 
 router.get("/", getAutores);
 router.get("/index", getAutoresIndex);
+router.get("/invitadxs", getAutoresInvitadxs);
 
 router.get("/:id/noticias",
     getNoticiasPorAutor
