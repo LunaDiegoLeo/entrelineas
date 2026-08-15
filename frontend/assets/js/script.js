@@ -91,7 +91,7 @@ async function cargarNoticiasInvitadxs() {
     }
 }
 
-function renderInvitadxs(invitados) {
+function renderNoticiasInvitadxs(invitados) {
     if (!newsContainerInvitadxs) {
         console.error("No existe el contenedor #news-container-invitadxs");
         return;
