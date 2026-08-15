@@ -382,92 +382,97 @@ img {
 .cat6 { top: 15%; right: -5%; transform: rotate(7deg); }
 
 /* =========================================================================
-   ESTILOS PARA TARJETAS DE INVITADXS (ESTILO BOCETO / SCRAPBOOK)
+   ESTILOS INVITADXS - IDÉNTICO AL BOCETO DE LA LIBRETA
    ========================================================================= */
 
-/* Contenedor principal (Asegúrate de ponerle esta clase a tu div en el HTML) */
 .invitados-grid {
     display: flex;
-    flex-direction: column; /* Una debajo de otra, como en tu lista */
-    gap: 30px;
-    max-width: 800px; /* Para que no se estiren demasiado en compu */
+    flex-direction: column;
+    gap: 35px; /* Espacio para que las fotos chuecas no choquen */
+    max-width: 600px; /* Un poco más angosto para que parezca libreta */
     margin: 0 auto;
+    padding: 10px 20px;
 }
 
-/* La tarjeta con borde dibujado */
-.card-boceto {
+/* La tarjeta que parece dibujada a mano */
+.card-libreta {
     background-color: white;
-    border: 3px solid var(--black);
-    /* Borde súper irregular para simular el trazo a mano de tu dibujo */
-    border-radius: 5px 25px 4px 15px / 25px 4px 15px 5px; 
-    box-shadow: 6px 6px 0px var(--black);
-    padding: 20px 25px;
-    transition: transform 0.3s ease;
-}
-
-.card-boceto:hover {
-    transform: translateY(-5px);
-}
-
-/* El título que va en la parte superior */
-.boceto-titulo {
-    font-size: 1.8rem;
-    color: var(--black);
-    margin-bottom: 15px;
-    border-bottom: 2px dashed var(--black); /* Línea de separación sutil */
-    padding-bottom: 10px;
-}
-
-/* El contenedor que pone la foto y el texto lado a lado */
-.boceto-contenido {
-    display: flex;
-    gap: 25px;
-    align-items: center;
-}
-
-/* El contenedor de la foto para darle la rotación */
-.boceto-foto-wrapper {
+    border: 2px solid var(--black);
+    
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; 
+    
+    padding: 20px 20px 25px 30px;
     position: relative;
-    flex-shrink: 0;
-    transform: rotate(-6deg); /* Inclinada hacia la izquierda, como tu dibujo */
+    box-shadow: -4px 4px 0px rgba(0,0,0,0.1); /* Sombra muy sutil */
 }
 
-.boceto-foto {
-    width: 120px;
-    height: 120px;
+/* El título dentro de la caja, como en tu dibujo */
+.libreta-titulo {
+    font-size: 1.4rem; /* Letra un poco más chica y manejable */
+    color: var(--black);
+    margin-bottom: 8px;
+    line-height: 1.2;
+    padding-left: 5px;
+}
+
+/* Contenedor de foto y texto */
+.libreta-contenido {
+    display: flex;
+    gap: 15px;
+    align-items: center; /* Centra la foto con el texto */
+}
+
+/* Envolvemos la foto para sacarla un poquito de la caja */
+.libreta-foto-wrapper {
+    flex-shrink: 0;
+    margin-left: -30px; 
+    margin-top: 10px;
+    transform: rotate(-6deg); /* Inclinación de foto mal pegada */
+}
+
+/* La foto estilo polaroid chiquita */
+.libreta-foto {
+    width: 130px; /* Imagen más grande como pediste */
+    height: 130px;
     object-fit: cover;
-    border: 3px solid var(--black);
+    border: 2px solid var(--black);
     background: white;
     padding: 4px;
+    box-shadow: -3px 3px 0px rgba(0,0,0,0.9); /* Sombra dura de pegatina */
 }
 
-.boceto-texto {
+/* El chismecito a la derecha */
+.libreta-texto {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 15px;
+    gap: 8px;
 }
 
-.boceto-texto p {
+.libreta-texto p {
     font-family: var(--font-text);
-    font-size: 1.1rem;
+    font-size: 0.95rem; /* Letra más chica tipo notas */
     color: var(--black);
-    line-height: 1.5;
+    line-height: 1.4;
     margin: 0;
 }
 
-@media (max-width: 600px) {
-    .boceto-contenido {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-    
-    .boceto-foto-wrapper {
-        align-self: center; /* Centra la fotito en celular */
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
+/* El enlace que parece subrayado con marcatextos */
+.libreta-link {
+    font-family: var(--font-ui);
+    font-weight: bold;
+    color: var(--black);
+    font-size: 1rem;
+    text-decoration: underline;
+    text-decoration-style: wavy; /* Subrayado ondulado dibujado a mano */
+    text-decoration-thickness: 3px;
+    margin-top: 5px;
+    transition: all 0.2s;
+}
+
+.libreta-link:hover {
+    color: var(--purple);
+    transform: translateX(5px);
 }
 
 

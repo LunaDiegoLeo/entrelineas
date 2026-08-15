@@ -100,36 +100,35 @@ function renderNoticiasInvitadxs(invitados) {
     newsContainerInvitadxs.innerHTML = "";
 
     invitados.forEach((invitado, index) => {
-        // Intercalamos colores de los botones para mantener tu estética
-        const btnColor = index % 2 === 0 ? "btn-purple" : "btn-green";
+        // Intercalamos colores para el subrayado del link
+        const markerColor = index % 2 === 0 ? "var(--purple)" : "var(--green)";
         
-        // Foto por defecto por si no tienen
         const foto = invitado.foto && invitado.foto !== "" 
             ? "assets/images/autores/" + invitado.foto 
             : "assets/images/autores/default-autor.png";
 
         newsContainerInvitadxs.innerHTML += `
-            <article class="card-boceto">
+            <article class="card-libreta">
                 <!-- Título arriba -->
-                <h3 class="boceto-titulo marker-text">
-                    ${invitado.titulo} -${invitado.nombre_autor}
+                <h3 class="libreta-titulo marker-text">
+                    ${invitado.nombre_autor}
                 </h3>
                 
-                <div class="boceto-contenido">
-                    <!-- Foto chueca a la izquierda -->
-                    <div class="boceto-foto-wrapper">
-                        <div class="tape tape-top"></div>
-                        <img src="${foto}" alt="Foto de ${invitado.nombre_autor}" class="boceto-foto">
+                <div class="libreta-contenido">
+                    <!-- Foto MÁS GRANDE y chueca a la izquierda -->
+                    <div class="libreta-foto-wrapper">
+                        <img src="${foto}" alt="Foto de ${invitado.nombre_autor}" class="libreta-foto">
                     </div>
                     
-                    <!-- Resumen y botón a la derecha -->
-                    <div class="boceto-texto">
+                    <!-- Resumen (letra más chica) y link a la derecha -->
+                    <div class="libreta-texto">
                         <p>${invitado.invitado_resumen}</p>
                         
                         <a href="noticia.html?slug=${invitado.slug}" 
-                           class="btn ${btnColor}" 
+                           class="libreta-link" 
+                           style="text-decoration-color: ${markerColor};"
                            aria-label="Leer más de ${invitado.nombre_autor}">
-                           Leer más
+                           Leer más ->
                         </a>
                     </div>
                 </div>
