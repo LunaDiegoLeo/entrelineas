@@ -77,7 +77,7 @@ export const getNoticiasPorAutor = async (req, res) => {
         const result = await pool.query(`
             SELECT id, titulo, slug, resumen, portada
             FROM noticias
-            WHERE autor_id = $1 AND invitado_resumen = false
+            WHERE autor_id = $1 AND invitado_resumen is null
             ORDER BY fecha_publicacion DESC
         `, [id]);
 

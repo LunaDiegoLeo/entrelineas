@@ -86,7 +86,7 @@ export const buscarPorTitulo = async (req, res) => {
         const result = await pool.query(`
             SELECT id, titulo, slug, resumen, portada
             FROM noticias
-            WHERE titulo ILIKE $1 AND invitado_resumen = false
+            WHERE titulo ILIKE $1 AND invitado_resumen is null
         `, [`%${titulo}%`]);
 
         res.json(result.rows);
@@ -114,7 +114,7 @@ export const getNoticiasPorFecha = async (req, res) => {
             SELECT id, titulo, slug, resumen, portada
             FROM noticias
             WHERE fecha_publicacion
-                BETWEEN $1 AND $2 AND invitado_resumen = false
+                BETWEEN $1 AND $2 AND invitado_resumen is null
             ORDER BY fecha_publicacion DESC
         `, [
             fecha_inicio,

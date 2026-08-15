@@ -30,7 +30,7 @@ export const getNoticiasPorCategoria = async (req, res) => {
         const result = await pool.query(`
             SELECT titulo, slug, resumen, portada
             FROM noticias
-            WHERE categoria_id = $1 AND invitado_resumen = false
+            WHERE categoria_id = $1 AND invitado_resumen is null
             ORDER BY fecha_publicacion DESC
         `, [id]);
 
