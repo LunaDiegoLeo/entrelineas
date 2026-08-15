@@ -3,7 +3,8 @@ import { Router } from "express";
 import {
     getAutores,
     getAutoresIndex,
-    getNoticiasPorAutor
+    getNoticiasPorAutor,
+    getAutoresInvitadxs
 } from "../controllers/autores.controller.js";
 
 const router = Router();
