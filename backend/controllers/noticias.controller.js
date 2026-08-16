@@ -7,6 +7,7 @@ export const getNoticias = async (req, res) => {
         const result = await pool.query(`
             SELECT id, titulo, slug, resumen, portada
             FROM noticias
+            WHERE invitado_resumen is null
             ORDER BY fecha_publicacion DESC
             LIMIT 4
         `);
