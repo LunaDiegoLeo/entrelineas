@@ -112,7 +112,7 @@ function renderNoticiasInvitadxs(invitados) {
             <article class="card-boceto">
                 <!-- Título arriba -->
                 <h3 class="boceto-titulo marker-text">
-                    ${invitado.titulo} -${invitado.nombre_autor}
+                    ${invitado.titulo} - ${invitado.nombre_autor}
                 </h3>
                 
                 <div class="boceto-contenido">
